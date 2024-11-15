@@ -1,7 +1,7 @@
-import js from "@eslint/js";
-import ts from "typescript-eslint";
-import prettierRecommended from "eslint-plugin-prettier/recommended";
-import globals from "globals";
+import js from '@eslint/js';
+import ts from 'typescript-eslint';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
 
 export default [
   js.configs.recommended,
@@ -9,8 +9,8 @@ export default [
   prettierRecommended,
   {
     rules: {
-      "no-unused-vars": "warn",
-      "no-undef": "warn",
+      'no-unused-vars': 'warn',
+      'no-undef': 'warn',
     },
     languageOptions: {
       globals: {

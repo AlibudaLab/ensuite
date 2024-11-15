@@ -1,15 +1,15 @@
-import fs from "fs";
-import { createVlayerClient, preverifyEmail } from "@vlayer/sdk";
+import fs from 'fs';
+import { createVlayerClient, preverifyEmail } from '@vlayer/sdk';
 import {
   getConfig,
   createContext,
   deployVlayerContracts,
-} from "@vlayer/sdk/config";
+} from '@vlayer/sdk/config';
 
-import proverSpec from "../out/EmailProver.sol/EmailProver";
-import verifierSpec from "../out/EmailProofVerifier.sol/EmailProofVerifier";
+import proverSpec from '../out/EmailProver.sol/EmailProver';
+import verifierSpec from '../out/EmailProofVerifier.sol/EmailProofVerifier';
 
-const mimeEmail = fs.readFileSync("./testdata/vlayer_welcome.eml").toString();
+const mimeEmail = fs.readFileSync('./testdata/vlayer_welcome.eml').toString();
 const unverifiedEmail = await preverifyEmail(mimeEmail);
 
 const { prover, verifier } = await deployVlayerContracts({
@@ -21,7 +21,7 @@ const config = getConfig();
 const { chain, ethClient, account, proverUrl, confirmations } =
   await createContext(config);
 
-console.log("Proving...");
+console.log('Proving...');
 
 const vlayer = createVlayerClient({
   url: proverUrl,
@@ -29,19 +29,19 @@ const vlayer = createVlayerClient({
 const hash = await vlayer.prove({
   address: prover,
   proverAbi: proverSpec.abi,
-  functionName: "main",
+  functionName: 'main',
   chainId: chain.id,
   args: [unverifiedEmail],
 });
 const result = await vlayer.waitForProvingResult(hash);
-console.log("Proof:", result[0]);
+console.log('Proof:', result[0]);
 
-console.log("Verifying...");
+console.log('Verifying...');
 
 const txHash = await ethClient.writeContract({
   address: verifier,
   abi: verifierSpec.abi,
-  functionName: "verify",
+  functionName: 'verify',
   args: result,
   chain,
   account: account,
@@ -54,4 +54,4 @@ await ethClient.waitForTransactionReceipt({
   retryDelay: 1000,
 });
 
-console.log("Verified!");
+console.log('Verified!');
