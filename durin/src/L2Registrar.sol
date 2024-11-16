@@ -14,13 +14,14 @@ pragma solidity 0.8.20;
 
 import {IL2Registry} from "./IL2Registry.sol";
 import {Proof, IEmailProofVerifier} from "./IEmailProofVerifier.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
 /// @notice Thrown when attempting to interact with a non-existent token
 error ERC721NonexistentToken(uint256 tokenId);
 
 /// @title Registrar (for Layer 2)
 /// @dev This is a simple registrar contract that is mean to be modified.
-contract L2Registrar {
+contract L2Registrar is AccessControl {
     /// @notice Emitted when a new name is registered
     /// @param label The registered name
     /// @param owner The owner of the newly registered name
@@ -37,6 +38,7 @@ contract L2Registrar {
     /// @notice Initializes the registrar with a registry contract
     /// @param _registry Address of the L2Registry contract
     constructor(IL2Registry _registry, IEmailProofVerifier _emailProofVerifier) {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         targetRegistry = _registry;
         emailProofVerifier = _emailProofVerifier;
     }
@@ -69,15 +71,30 @@ contract L2Registrar {
         }
     }
 
-    /// @notice Registers a new name
+    /// @notice Registers a new subname with a proof (employee side)
+    /// @param proof The proof to verify
     /// @param label The name to register
     /// @param owner The address that will own the name
-    function register(
+    function registerWithProof(
         Proof calldata proof,
         string memory label,
         address owner
     ) external {
         emailProofVerifier.verify(proof, owner);
+        targetRegistry.register(label, owner);
+        // Set the mainnet resolved address
+        targetRegistry.setAddr(
+            keccak256(bytes(label)), // Convert label to bytes32 hash
+            60, // Mainnet coinType
+            abi.encodePacked(owner) // Convert address to bytes
+        );
+        emit NameRegistered(label, owner);
+    }
+
+    /// @notice Registers a new subname by an admin
+    /// @param label The name to register
+    /// @param owner The address that will own the name
+    function registerByAdmin(string memory label, address owner) external onlyRole(DEFAULT_ADMIN_ROLE) {
         targetRegistry.register(label, owner);
         // Set the mainnet resolved address
         targetRegistry.setAddr(
