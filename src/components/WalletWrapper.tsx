@@ -15,6 +15,9 @@ import {
   WalletDropdownFundLink,
   WalletDropdownLink,
 } from '@coinbase/onchainkit/wallet';
+import { useAccount, useEnsAvatar, useEnsName } from 'wagmi';
+import { normalize } from 'viem/ens';
+import { User } from '@nextui-org/user';
 
 type WalletWrapperParams = {
   text?: string;
@@ -26,6 +29,16 @@ export default function WalletWrapper({
   text,
   withWalletAggregator = false,
 }: WalletWrapperParams) {
+  const { address } = useAccount();
+  const { data: ensName } = useEnsName({
+    address,
+    query: { enabled: Boolean(address) },
+  });
+  const { data: ensAvatar } = useEnsAvatar({
+    name: normalize(ensName ?? ''),
+    query: { enabled: Boolean(address) },
+  });
+
   return (
     <>
       <Wallet>
@@ -34,21 +47,25 @@ export default function WalletWrapper({
           text={text}
           className={className}
         >
-          <Avatar className="h-6 w-6" />
-          <Name />
+          <User
+            name={ensName}
+            avatarProps={{
+              src: ensAvatar ?? '',
+            }}
+          />
         </ConnectWallet>
         <WalletDropdown>
           <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick={true}>
-            <Avatar />
-            <Name />
             <Address />
+          </Identity>
+          <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick={true}>
             <EthBalance />
           </Identity>
-          <WalletDropdownBasename />
-          <WalletDropdownLink icon="wallet" href="https://wallet.coinbase.com">
+          {/* <WalletDropdownBasename /> */}
+          {/* <WalletDropdownLink icon="wallet" href="https://wallet.coinbase.com">
             Go to Wallet Dashboard
-          </WalletDropdownLink>
-          <WalletDropdownFundLink />
+          </WalletDropdownLink> */}
+          {/* <WalletDropdownFundLink /> */}
           <WalletDropdownDisconnect />
         </WalletDropdown>
       </Wallet>

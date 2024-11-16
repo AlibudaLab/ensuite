@@ -16,8 +16,8 @@ export const mintABI = [
   },
 ] as const;
 
-export const VLAYER_PROVER = "0x4729a91b1f98ac3b2508d11a7a69a422020a7554"
-export const VLAYER_VERIFIER = "0xcfb628f32a1ef9685683dbe77cb4b785e335ef23"
+export const VLAYER_PROVER = '0x4729a91b1f98ac3b2508d11a7a69a422020a7554';
+export const VLAYER_VERIFIER = '0xcfb628f32a1ef9685683dbe77cb4b785e335ef23';
 
 export const TEST_EMAIL_BODY = `Delivered-To: ivanruch@gmail.com
 Received: by 2002:a0c:fc43:0:b0:6cb:27cc:45ba with SMTP id w3csp1834130qvp;
@@ -108,5 +108,4 @@ Content-Type: text/html; charset="UTF-8"
 <div dir="ltr">Hello</div>
 
 --000000000000647048062586e3c2--
-`
-
+`;
