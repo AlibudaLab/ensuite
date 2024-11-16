@@ -91,10 +91,11 @@ export const useManageVault = () => {
                 signer: ADMIN_PRIVATE_KEY,
                 safeAddress: ADMIN_SAFE_ADDRESS
             });
-
-            const removeTransaction = await protocolKit.createRemoveOwnerTx({
+            const params: RemoveOwnerTxParams = {
                 ownerAddress: employeeAddress,
-            });
+            };
+
+            const removeTransaction = await protocolKit.createRemoveOwnerTx(params);
 
             const client = await protocolKit.getSafeProvider().getExternalSigner()
             if (!client) throw new Error('Failed to get external signer')
