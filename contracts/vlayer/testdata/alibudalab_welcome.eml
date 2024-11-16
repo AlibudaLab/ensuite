@@ -1,302 +1,114 @@
-Delivered-To: haopining@gmail.com
-Received: by 2002:a17:902:f7cc:b0:20b:f67:442 with SMTP id h12csp1080477plw;
-        Fri, 15 Nov 2024 07:54:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFZUkD6Ilx2r7ZJz5IU7e6sL9rjEKraFMjlNq9zGoGsbUahPxT3Lw6eSuj3Uy1JftBmdymy
-X-Received: by 2002:a05:620a:27cd:b0:7b1:1352:66fb with SMTP id af79cd13be357-7b3622ce0c7mr364898385a.29.1731686062305;
-        Fri, 15 Nov 2024 07:54:22 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1731686062; cv=none;
+Delivered-To: ching.lun0216@gmail.com
+Received: by 2002:a98:b50f:0:b0:218:99e5:7919 with SMTP id h15csp1864876eiw;
+        Sat, 16 Nov 2024 11:16:49 -0800 (PST)
+X-Received: by 2002:a05:6214:3c8b:b0:6d1:85a7:3cc0 with SMTP id 6a1803df08f44-6d3fb75a9acmr87667216d6.12.1731784608865;
+        Sat, 16 Nov 2024 11:16:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1731784608; cv=none;
         d=google.com; s=arc-20240605;
-        b=U1VgGzcz8sjPbNjWY0qXbNDFwZa3x0WXuK8JYRooFq2+XtdN3FiwQuyyZ/hoMWlr7c
-         HsLefUSGw2IizQB5k8VITKMaYqtB5rhz8+05Qha6okTgW400JG0XaFWNYEVbOJQSI1KS
-         psMTw/MWdfZ2+zK/T9uh9cDOeVW4f1n80fvoXD3yt4I4YUPB4QVTTbxVx9BI/Ooq49hp
-         G2cIs/S3LavFKTD9f9xK+Q7RBSyYybI3DeIwrs8+5471+BPjTNrIHX0qV8scBvZbcpd4
-         Okt7pn29FsboLpWJ7fxvgsBRZ9Wv2fUcQbrVTwWZtYBXgehRUWuBpKlEUvyngJ84bCx1
-         ZPxg==
+        b=dnifokq7CxpTE3vnicfFCnQIH8gZocK6HTHPbFBx3nyY5ZsesIKOP7OQHjaJvwjP8D
+         BgSzJrqsdG3tHTyHReo4wDcR43a070wxyP/46ifCIrjbF9ui5/sfMYrwWtXKeE/p388Z
+         BpD+mOuQCRoxcjwwGY4n2o3RTW79Ewn0JIsUI2U954PLuUTV3myIsIlY+WCOON2hnij6
+         IdgOyhqbzUbN8hrtT9iDLFMvfAWJ9U8uCtzyxts6xR3ufXaQnfkvB/K797DHKTxuXHtX
+         R7zeNB6a1GKrcV7+f7WqJ8tVXGDEIyyqmA26BWL99gaH3q3/+LOorxgJcDkRg4PljFqQ
+         vX5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:mime-version:subject:message-id:to:from
-         :date:dkim-signature;
-        bh=9t0rP9G5ED0z1wWKNR7IDQnfqtmfhd9G4uWJGNqmv5c=;
-        fh=Lfy2bnPs68oIET1u6ZhmQAURZJEATZLJ9ND9St6KHnA=;
-        b=ft68rMSj+m616gkVR4umsWCW1xhTIkwgLNM4u6etY6lDm/JF0RSnfztmSToio6BhQq
-         UbrO6k2ku2rlcDysqcBAZoUYROgPiNr4/9PTRf/w9RDhADpvo+Sas9eqm/e2VlD4kkXR
-         UnPST6k1cJTHGXyC9yw3jYObMn6vz9kxn65HIPvAD44GuGSVlDJnzhsjfKV4wyln3/UO
-         3e9GCRb9x6H/qt1iqDHSJ2jASlzHiAVLziQVkK6oDGkIndJpQafbwv7q9zRdh+11l3xW
-         HwdSDyqU+mgXLg7YUphuow8OHyp3FkrMiLf9IvX923sXmwI8K1B2dLulmLyeAh5xDORf
-         EpnQ==;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=ulUu2VUsyprkmLI1XZ1WDoui1NqDtgrlG63rnerUQGk=;
+        fh=HVHOxTSt0Fr3+CvZCwMJw7GlY0h1uA9+V93MF1m2qv8=;
+        b=jJJJ3xPdgr2JKjhCPeX6mp3+Va71ZUqNz39ASkJ6idgRp5+EHHjaXXrE7z0O5PJ/Sn
+         RnKnz0UnV2kmjdqPNLGFPxNXK7eH+jDBlqTBxwYIPLYaciIqhI1usAwY6FZwRjQkXP+m
+         WEGwzlEG219yHXchNh3fQ8Te95AT+C61R5hV7+u42M2QFkMQfMdxzhgcpWVWxpo/mpHh
+         7Lfzk3fm0z3WtnLXCb1Ecz4W878v3qGMZc3Q+wsD3+awTrLx6ARK/gm32wbJTn0/nsQ6
+         lq5Yuq7CbhedzKzFI4v0e4a6tHW2tFmdsD2jzRox8AwFnNTTo4Y+iQ8SNCJJlYT9yKXN
+         rrgg==;
         dara=google.com
 ARC-Authentication-Results: i=1; mx.google.com;
-       dkim=pass header.i=@github.com header.s=pf2023 header.b=HQ1Du+Yd;
-       spf=pass (google.com: domain of noreply@github.com designates 192.30.252.203 as permitted sender) smtp.mailfrom=noreply@github.com;
-       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=github.com
-Return-Path: <noreply@github.com>
-Received: from out-20.smtp.github.com (out-20.smtp.github.com. [192.30.252.203])
-        by mx.google.com with ESMTPS id af79cd13be357-7b35ca2a558si431144285a.321.2024.11.15.07.54.22
-        for <haopining@gmail.com>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 07:54:22 -0800 (PST)
-Received-SPF: pass (google.com: domain of noreply@github.com designates 192.30.252.203 as permitted sender) client-ip=192.30.252.203;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZdZONrft;
+       spf=pass (google.com: domain of sh1001309@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=sh1001309@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+Return-Path: <sh1001309@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id 6a1803df08f44-6d412dfcb05sor15098826d6.8.2024.11.16.11.16.48
+        for <ching.lun0216@gmail.com>
+        (Google Transport Security);
+        Sat, 16 Nov 2024 11:16:48 -0800 (PST)
+Received-SPF: pass (google.com: domain of sh1001309@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
 Authentication-Results: mx.google.com;
-       dkim=pass header.i=@github.com header.s=pf2023 header.b=HQ1Du+Yd;
-       spf=pass (google.com: domain of noreply@github.com designates 192.30.252.203 as permitted sender) smtp.mailfrom=noreply@github.com;
-       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=github.com
-Received: from github.com (hubbernetes-node-0f865d0.va3-iad.github.net [10.48.153.38])
-	by smtp.github.com (Postfix) with ESMTPA id 0C5C78C033C
-	for <haopining@gmail.com>; Fri, 15 Nov 2024 07:54:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=github.com;
-	s=pf2023; t=1731686062;
-	bh=9t0rP9G5ED0z1wWKNR7IDQnfqtmfhd9G4uWJGNqmv5c=;
-	h=Date:From:To:Subject:From;
-	b=HQ1Du+YdpYXxhCJAIyQsGfa6CuH3yB1PIONMnCFOQBH6TFjL4JbRMJz5YhZXKSMdd
-	 jNKIaOCuVCr8/3yGXKyhanF7nxpLowhQbcZT0wO6+p4GqMjm2XQwYeja27HPE2OgRt
-	 cd7pS41UmcTWNAUXu7ocXR4c3VIEgyD3QDESGLDw=
-Date: Fri, 15 Nov 2024 07:54:22 -0800
-From: "ryanycw.eth" <noreply@github.com>
-To: haopining@gmail.com
-Message-ID: <67376eaea38d_7a193c623d7@lowworker-677877c569-42q67.mail>
-Subject: ryanycw invited you to AlibudaLab/ensuite
-Mime-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="--==_mimepart_67376eae342c_7a193c62256";
- charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Auto-Response-Suppress: All
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=ZdZONrft;
+       spf=pass (google.com: domain of sh1001309@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=sh1001309@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731784608; x=1732389408; dara=google.com;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ulUu2VUsyprkmLI1XZ1WDoui1NqDtgrlG63rnerUQGk=;
+        b=ZdZONrfto2CtSMnw25mvrf43a6ekJbdh+g9NwP+BTHtytXhDX/qwu0+3bFXTBBpSvE
+         EOeBvaAbAQVWwh33sgNL2+zNqS5CCl3haCREp92/jpAff1iy2LO2tkISe71HpIJ1402L
+         usmbvio0PXBvV+OIk6Z9hHZue99Xz6pZ5Wz38+y6/7+s1mWTL+onGN335T1ND2Dixvrm
+         AZ5F3ke1xW75Xx+B0jZbKyCwWzhe3s9WQE1Bi9Axi/elpZ5TCUFTOmmzHcBzNdB31V8P
+         ZIIBD/jFAx0eXudaozFn1RJeMdsoBnO+Ff6OGeFsyA4/cPbWJLS1tLJWBI95sCu8bzaW
+         +fKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731784608; x=1732389408;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ulUu2VUsyprkmLI1XZ1WDoui1NqDtgrlG63rnerUQGk=;
+        b=M4zS2LbxFJbDHvc+dLh57uhY/erNsgYZeuAvSIarKSV1kTaaUIDcfmcmiOGYcZVmLb
+         1qHS3Nr2Wnkuk8PWmU7q7K0jUHH9qkHZFuaZ5sHt313tNuJKJ3bJOlGLbCu5pgqkey6p
+         1luawzLreFoquQ7si1oWSPTuqfNfucy+14UuVIzCj757ik7z0ir5TuKf47E6f1fEw4nG
+         WTcVnYxD313KtD841QE2yuD4CZaslBcH8u5wXvGj6Fl4DGt7zGpuq+tH5Ni+4piLGncq
+         m02rJ4xtT08g/W/Ew8+P20b8zYPisSPDMz2ij02ok8o2gTw7tZvFcLbZXoDdCZhZoklb
+         xmkg==
+X-Gm-Message-State: AOJu0Yxj/NNN7vuFMiTP7bPgrK3bEVj7aX/Hw6GLT073srN4+qGnIdhZ
+	ao8OIsM3ySrNq6m2u6rWVl369KL14w1iYhlcD9LtI3of62aHyNzhqTgOfZmG7BGG1WI2XYl+GKC
+	oLqqRd9T/QDG74AgEnstLqn0PXI1NyUOsj0y1yg==
+X-Google-Smtp-Source: AGHT+IGmCbfxgTpCvgoH3Ray+oYx8mwS+KT/k2QIaGHBqsNn800U7PHv0Wy2MKyaIPFmFPlrOrNBfnrgtDrFmZVjwOM=
+X-Received: by 2002:a05:6214:5c08:b0:6d3:518d:b497 with SMTP id
+ 6a1803df08f44-6d3fb8470e7mr88175546d6.44.1731784608367; Sat, 16 Nov 2024
+ 11:16:48 -0800 (PST)
+MIME-Version: 1.0
+From: FoodChain <sh1001309@gmail.com>
+Date: Sun, 17 Nov 2024 02:16:37 +0700
+Message-ID: <CAMWfz9W208UOmki9OUXQGYFSrs4_uhck-tqWB+QLuyg2e2t9vg@mail.gmail.com>
+Subject: Welcome to vlayer, 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266!
+To: "ching.lun0216@gmail.com" <ching.lun0216@gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000068ce2806270c86a4"
 
+--00000000000068ce2806270c86a4
+Content-Type: text/plain; charset="UTF-8"
 
-----==_mimepart_67376eae342c_7a193c62256
-Content-Type: text/plain;
- charset=UTF-8
+Dear Juno,
+
+This is your assigned ENS name: juno.ensuite.eth
+
+ENSuite LTC.
+
+--00000000000068ce2806270c86a4
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-@ryanycw has invited you to collaborate on the AlibudaLab/ensuite reposit=
-ory.
+<div dir=3D"ltr">
 
 
-Visit https://github.com/AlibudaLab/ensuite/invitations to accept or decl=
-ine this invitation.
-
-You can also head over to https://github.com/AlibudaLab/ensuite to check =
-out the repository or visit https://github.com/ryanycw to learn a bit mor=
-e about @ryanycw.
-
-This invitation will expire in 7 days.
-
-Some helpful tips:
-- If you get a 404 page, make sure you=E2=80=99re signed in as haopining.=
-
-- Too many emails from @ryanycw? You can block them by visiting
-  https://github.com/settings/blocked_users?block_user=3Dryanycw or repor=
-t abuse at
-  https://github.com/contact/report-abuse?report=3Dryanycw
-
----
-View it on GitHub:
-https://github.com/AlibudaLab/ensuite=
-
-----==_mimepart_67376eae342c_7a193c62256
-Content-Type: text/html;
- charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-    <title>ryanycw invited you to AlibudaLab/ensuite</title>
-
-    
-
-  </head>
-<body bgcolor="#fafafa" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" style="width: 100% !important; min-width: 100%; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #fafafa; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; text-align: center; line-height: 20px; font-size: 14px; margin: 0; padding: 0;">
-
-  <table class="body" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: center; height: 100%; width: 100%; background-color: #fafafa; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;" bgcolor="#fafafa">
-    <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-      <td class="center" align="center" valign="top" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;">
-        <center style="width: 100%; min-width: 580px;">
-        <!--email content-->
-
-          <table class="row header" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: center; width: 100%; position: relative; padding: 0px;">
-            <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-              <td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;" valign="top">
-                <center style="width: 100%; min-width: 580px;">
-
-                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0;">
-                    <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-                      <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; position: relative; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0 0px 0 0;" align="center" valign="top">
-
-                        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: center; width: 540px; margin: 0 auto; padding: 0;">
-                          <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-                            <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
-                              <div class="mark" style="text-align: center;" align="center">
-                                <!-- add UTM params to URL -->
-                                <a href="https://github.com" style="color: #4183C4; text-decoration: none;">
-                                  <img alt="GitHub home" class="center logo-wordmark" src="https://github.githubassets.com/images/email/global/wordmark.png" width="102" height="28" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; float: none; text-align: center; margin: 0 auto; padding: 25px 0 17px; border-style: none;" align="none">
-                                </a>
-                              </div>
-                            </td>
-                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; visibility: hidden; width: 0px; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;" align="center" valign="top"></td>
-                          </tr>
-                        </table>
-<!--/.twelve.columns-->
-
-                      </td>
-                    </tr>
-                  </table>
-<!--/.container-->
-
-                </center>
-              </td>
-            </tr>
-          </table>
-<!--/.row.header-->
-
-          <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0;">
-            <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-              <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;" align="center" valign="top">
-
-                <table class="row" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: center; width: 100%; position: relative; display: block; padding: 0px;">
-                  <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-                    <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; position: relative; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0 0px 0 0;" align="center" valign="top">
-
-                      <div class="panel" style="background: #ffffff; background-color: #ffffff; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 20px; border: 1px solid #dddddd;">
-
-                        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: center; width: 540px; margin: 0 auto; padding: 0;">
-                          <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-                            <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0px 0px 0;" align="center" valign="top">
-
-                              <div class="email-content">
-
-                                <div class="org-content-header" style="padding: 15px 0 10px;">
-  <img class="avatar avatar-user" src="https://avatars.githubusercontent.com/u/63644531?s=120&amp;v=4" width="60" height="60" alt="@ryanycw" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; overflow: hidden; -webkit-border-radius: 3px; border-radius: 3px;">
-  <img class="content-header-octicon" alt="plus" src="https://github.githubassets.com/assets/octicon-plus-96dac899f6ef.png" height="60" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%;">
-    <img class="avatar avatar-user" src="https://avatars.githubusercontent.com/u/99705477?s=120&amp;v=4" width="60" height="60" alt="@haopining" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; overflow: hidden; -webkit-border-radius: 3px; border-radius: 3px;">
-</div>
-
-<h1 class="primary-heading" style="color: #333; font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; font-weight: 300; text-align: center; line-height: 1.2; word-break: normal; font-size: 24px; margin: 10px 0 25px; padding: 0;" align="center">@ryanycw has invited you to collaborate on the<br><strong>AlibudaLab/ensuite</strong> repository</h1>
 
 
-<hr class="rule" style="color: #d9d9d9; background-color: #d9d9d9; height: 1px; margin: 20px 0; border-style: none;">
 
-<p style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; color: #333; line-height: 20px; text-align: left; margin: 15px 0 5px; padding: 0;" align="left">
-  You can <a href="https://github.com/AlibudaLab/ensuite/invitations" style="color: #4183C4; text-decoration: none;">accept or decline</a> this invitation.
-    You can also head over to <a href="https://github.com/AlibudaLab/ensuite" style="color: #4183C4; text-decoration: none;">https://github.com/AlibudaLab/ensuite</a> to check out the repository or visit <a href="https://github.com/ryanycw" style="color: #4183C4; text-decoration: none;">@ryanycw</a> to learn a bit more about them.
-</p>
-  <p style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; color: #333; line-height: 20px; text-align: left; margin: 15px 0 5px; padding: 0;" align="left">
-    This invitation will expire in 7 days.
-  </p>
-<!-- note: VML markup is fallback for Outlook 2007, 2010, and 2013; see http://buttons.cm/ -->
-<div class="cta-button-wrap cta-button-wrap-centered" style="text-align: center; color: #ffffff; padding: 20px 0 25px;" align="center">
-<!--[if mso]>
-<p style="line-height:0px;height:0;font-size:1px;margin:0;padding:0;">&nbsp;</p>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://github.com/AlibudaLab/ensuite/invitations" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="8%" stroke="f" fillcolor="#4183C4">
-  <w:anchorlock/>
-  <center>
-<![endif]-->
-    <a class="cta-button" href="https://github.com/AlibudaLab/ensuite/invitations" style="display: inline-block; color: #fff; font-size: 14px; font-weight: 600; background-color: #4183C4; text-decoration: none; width: auto !important; text-align: center; border-radius: 5px; -webkit-border-radius: 5px; box-shadow: 0px 3px 0px #25588c; letter-spacing: normal; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-text-size-adjust: none; margin: 0 auto; padding: 6px 12px;">View invitation</a>
-<!--[if mso]>
-  </center>
-</v:roundrect>
-<![endif]-->
-</div>
+<p class=3D"gmail-p1" style=3D"margin:0px;font-variant-numeric:normal;font-=
+variant-east-asian:normal;font-variant-alternates:normal;font-size-adjust:n=
+one;font-kerning:auto;font-feature-settings:normal;font-stretch:normal;font=
+-size:16px;line-height:normal;font-family:&quot;Helvetica Neue&quot;;color:=
+rgb(0,0,0)">Dear Juno,</p>
+<p class=3D"gmail-p1" style=3D"margin:0px;font-variant-numeric:normal;font-=
+variant-east-asian:normal;font-variant-alternates:normal;font-size-adjust:n=
+one;font-kerning:auto;font-feature-settings:normal;font-stretch:normal;font=
+-size:16px;line-height:normal;font-family:&quot;Helvetica Neue&quot;;color:=
+rgb(0,0,0)">This is your assigned ENS name: juno.ensuite.eth</p>
+<p class=3D"gmail-p1" style=3D"margin:0px;font-variant-numeric:normal;font-=
+variant-east-asian:normal;font-variant-alternates:normal;font-size-adjust:n=
+one;font-kerning:auto;font-feature-settings:normal;font-stretch:normal;font=
+-size:16px;line-height:normal;font-family:&quot;Helvetica Neue&quot;;color:=
+rgb(0,0,0)">ENSuite LTC.</p></div>
 
-
-<p class="email-body-subtext" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: normal; color: #333; line-height: 20px; text-align: left; margin: 15px 0 5px; padding: 0;" align="left">
-  <strong>Note:</strong> This invitation was intended for <strong>haopining@gmail.com</strong>.
-  If you were not expecting this invitation, you can ignore this email.
-    If  @ryanycw is sending you too many emails, you can
-    <a href="https://github.com/settings/blocked_users?block_user=ryanycw" style="color: #4183C4; text-decoration: none;">block them</a>
-    or <a href="https://github.com/contact/report-abuse?report=ryanycw" style="color: #4183C4; text-decoration: none;">report abuse</a>.
-</p>
-
-<hr class="rule" style="color: #d9d9d9; background-color: #d9d9d9; height: 1px; margin: 20px 0; border-style: none;">
-
-<p class="email-text-small email-text-gray" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; color: #777777; line-height: 20px; text-align: left; margin: 15px 0 5px; padding: 0;" align="left">
-  <strong>Getting a 404 error?</strong> Make sure you&#8217;re signed in as <strong>haopining</strong>.
-</p>
-
-<p class="email-text-small email-text-gray" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; color: #777777; line-height: 20px; text-align: left; margin: 15px 0 5px; padding: 0;" align="left">
-  <strong>Button not working?</strong> Copy and paste this link into your browser:
-  <br><a href="https://github.com/AlibudaLab/ensuite/invitations" style="color: #4183C4; text-decoration: none;">https://github.com/AlibudaLab/ensuite/invitations</a>
-</p>
-
-
-                              </div>
-<!--/.content-->
-
-                            </td>
-                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; visibility: hidden; width: 0px; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;" align="center" valign="top"></td>
-                          </tr>
-                        </table>
-<!--/.twelve-columns-->
-
-                      </div>
-<!--/.panel-->
-
-                    </td>
-                  </tr>
-                </table>
-<!--/.row-->
-
-              </td>
-            </tr>
-          </table>
-<!--/.container-->
-
-          <table class="row layout-footer" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: center; width: 100%; position: relative; padding: 0px;">
-            <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-              <td class="center" align="center" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;" valign="top">
-                <center style="width: 100%; min-width: 580px;">
-
-                  <table class="container" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: inherit; width: 580px; margin: 0 auto; padding: 0;">
-                    <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-                      <td class="wrapper last" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; position: relative; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0 0px 0 0;" align="center" valign="top">
-
-                        <table class="twelve columns" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: center; width: 540px; margin: 0 auto; padding: 0;">
-                          <tr style="vertical-align: top; text-align: center; padding: 0;" align="center">
-                            <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0px 0px 10px;" align="center" valign="top">
-                              <div class="footer-links" style="text-align: center; padding: 20px 0;" align="center">
-                                <!-- links need UTM params -->
-                                <p class="footer-text" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; color: #999; line-height: 20px; text-align: center; margin: 0; padding: 0;" align="center"><a href="https://github.com/settings/emails" style="color: #4183C4; text-decoration: none;">Manage your GitHub email preferences</a></p>
-                                <p class="footer-text" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; color: #999; line-height: 20px; text-align: center; margin: 0; padding: 0;" align="center">
-                                    <a href="https://docs.github.com/articles/github-terms-of-service/" style="color: #4183C4; text-decoration: none;">Terms</a> &#8226;
-                                    <a href="https://docs.github.com/articles/github-privacy-policy/" style="color: #4183C4; text-decoration: none;">Privacy</a> &#8226;
-                                  <a href="https://github.com/login" style="color: #4183C4; text-decoration: none;">Sign in to GitHub</a>
-                                </p>
-                              </div>
-                              <div class="content" style="margin: 0 0 15px;">
-                                <!-- add UTM params to URL -->
-                                <a href="https://github.com" style="color: #4183C4; text-decoration: none;">
-                                  <img alt="GitHub home" class="logo-invertocat" src="https://github.githubassets.com/images/email/global/footer-mark.png" width="40" height="38" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; border-style: none;">
-                                </a>
-                              </div>
-                              <div class="content" style="margin: 0 0 15px;">
-                                <p class="footer-text" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; color: #999; line-height: 20px; text-align: center; margin: 0; padding: 0;" align="center">GitHub, Inc.</p>
-                                <p class="footer-text" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; color: #999; line-height: 20px; text-align: center; margin: 0; padding: 0;" align="center">88 Colin P Kelly Jr Street</p>
-                                <p class="footer-text" style="word-wrap: normal; hyphens: none; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: normal; color: #999; line-height: 20px; text-align: center; margin: 0; padding: 0;" align="center">San Francisco, CA 94107</p>
-                              </div>
-                            </td>
-                            <td class="expander" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; visibility: hidden; width: 0px; color: #333333; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: normal; line-height: 20px; font-size: 14px; margin: 0; padding: 0;" align="center" valign="top"></td>
-                          </tr>
-                        </table>
-<!--/.twelve.columns-->
-
-                      </td>
-                    </tr>
-                  </table>
-<!--/.container-->
-
-                </center>
-              </td>
-            </tr>
-          </table>
-<!--/.row.footer-->
-
-        <!--/email content-->
-        </center>
-      </td>
-    </tr>
-  </table>
-<!--/.body-->
-</body>
-</html>
-
-----==_mimepart_67376eae342c_7a193c62256--
+--00000000000068ce2806270c86a4--
