@@ -1,9 +1,5 @@
 'use client';
-import {
-  Address,
-  EthBalance,
-  Identity,
-} from '@coinbase/onchainkit/identity';
+import { Address, EthBalance, Identity } from '@coinbase/onchainkit/identity';
 import {
   ConnectWallet,
   Wallet,

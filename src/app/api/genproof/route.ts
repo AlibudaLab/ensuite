@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { generateEmailProof } from 'src/service/vlayer';
 
 export async function POST(req: NextRequest): Promise<Response> {
