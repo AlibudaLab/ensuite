@@ -16,6 +16,7 @@ import {
   Input,
   ModalFooter,
   useDisclosure,
+  Chip,
 } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import LoginButton from 'src/components/LoginButton';
@@ -652,9 +653,7 @@ export default function Dashboard() {
                             <TableCell>{item.subname}</TableCell>
                             <TableCell>{item.email}</TableCell>
                             <TableCell>
-                              <span className={item.statusClass}>
-                                {item.ensuite}
-                              </span>
+                              <Chip color="success">On</Chip>
                             </TableCell>
                           </TableRow>
                         )}
