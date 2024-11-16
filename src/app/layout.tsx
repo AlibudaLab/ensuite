@@ -7,6 +7,13 @@ import '@rainbow-me/rainbowkit/styles.css';
 import dynamic from 'next/dynamic';
 
 import { NextUIProvider } from '@nextui-org/react';
+import { Alegreya } from 'next/font/google';
+
+const alegreya = Alegreya({
+  subsets: ['latin'],
+  variable: '--font-alegreya',
+  display: 'swap',
+});
 
 const OnchainProviders = dynamic(
   () => import('src/components/OnchainProviders'),
@@ -34,7 +41,7 @@ export default function RootLayout({
   children,
 }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${alegreya.variable}`}>
       <body className="flex items-center justify-center">
         <NextUIProvider>
           <OnchainProviders>{children}</OnchainProviders>
