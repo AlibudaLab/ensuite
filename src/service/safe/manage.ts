@@ -13,27 +13,8 @@ import { useState } from 'react';
 const ADMIN_PRIVATE_KEY = '0x...';
 const ADMIN_SAFE_ADDRESS = '0x...';
 
-export const useManageVault = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>('');
-  const [txHash, setTxHash] = useState<string>('');
 
-  const { address: userAddress } = useAccount();
-  const { data: walletClient } = useWalletClient();
-  const publicClient = usePublicClient();
-
-  const addEmployee = async (employeeAddress: string) => {
-    if (!walletClient || !userAddress) {
-      setError('Wallet not connected');
-      return;
-    }
-
-    if (!isAddress(employeeAddress)) {
-      setError('Invalid employee address');
-      return;
-    }
-
-    setLoading(true);
+const addEmployee = async (userAddresses: string[]) => {
     try {
       const protocolKit = await Safe.init({
         provider: baseSepolia.rpcUrls.default.http[0],
@@ -42,7 +23,7 @@ export const useManageVault = () => {
       });
 
       const params: AddOwnerTxParams = {
-        ownerAddress: employeeAddress,
+        ownerAddress: userAddresses,
       };
 
       const addTransaction = await protocolKit.createAddOwnerTx(params);
@@ -61,25 +42,12 @@ export const useManageVault = () => {
       const owners = await protocolKit.getOwners();
       console.log('Current owners:', owners);
     } catch (error) {
-      console.error('Error adding new owner:', error);
-      setError(error instanceof Error ? error.message : 'Failed to add owner');
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.error('Error adding new owner:', error);
+  }
+};
 
-  const removeEmployee = async (employeeAddress: string) => {
-    if (!walletClient || !userAddress) {
-      setError('Wallet not connected');
-      return;
-    }
-
-    if (!isAddress(employeeAddress)) {
-      setError('Invalid employee address');
-      return;
-    }
-
-    setLoading(true);
+  
+const removeEmployee = async (userAddresses: string[]) => {
     try {
       const protocolKit = await Safe.init({
         provider: baseSepolia.rpcUrls.default.http[0],
@@ -87,7 +55,7 @@ export const useManageVault = () => {
         safeAddress: ADMIN_SAFE_ADDRESS,
       });
       const params: RemoveOwnerTxParams = {
-        ownerAddress: employeeAddress,
+        ownerAddress: userAddresses,
       };
 
       const removeTransaction = await protocolKit.createRemoveOwnerTx(params);
@@ -107,18 +75,7 @@ export const useManageVault = () => {
       console.log('Current owners:', owners);
     } catch (error) {
       console.error('Error removing owner:', error);
-      setError(
-        error instanceof Error ? error.message : 'Failed to remove owner',
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-  return {
-    addEmployee,
-    removeEmployee,
-    loading,
-    error,
-    txHash,
   };
 };
+
+export { addEmployee, removeEmployee };
