@@ -16,6 +16,11 @@ const config: Config = {
         xl: '1280px',
       },
     },
+    extend: {
+      fontFamily: {
+        alegreya: ['var(--font-alegreya)', 'serif'],
+      },
+    },
   },
   darkMode: 'class',
   plugins: [nextui()],
