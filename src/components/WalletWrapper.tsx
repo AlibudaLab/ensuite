@@ -1,19 +1,14 @@
 'use client';
 import {
   Address,
-  Avatar,
   EthBalance,
   Identity,
-  Name,
 } from '@coinbase/onchainkit/identity';
 import {
   ConnectWallet,
   Wallet,
   WalletDropdown,
-  WalletDropdownBasename,
   WalletDropdownDisconnect,
-  WalletDropdownFundLink,
-  WalletDropdownLink,
 } from '@coinbase/onchainkit/wallet';
 import { useAccount, useEnsAvatar, useEnsName } from 'wagmi';
 import { normalize } from 'viem/ens';

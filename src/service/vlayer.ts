@@ -1,5 +1,5 @@
-import { VLAYER_PROVER, VLAYER_VERIFIER } from 'src/constants';
-import { Abi } from 'viem';
+import { VLAYER_PROVER, } from 'src/constants';
+import type { Abi } from 'viem';
 import { createVlayerClient, preverifyEmail } from '@vlayer/sdk';
 import { getConfig, createContext } from '@vlayer/sdk/config';
 import proverSpec from '../web3/contracts/EmailProver.json';
