@@ -46,7 +46,7 @@ export default function RootLayout({
       <body className="flex items-center justify-center">
         <NextUIProvider>
           <OnchainProviders>{children}
-          <Toaster position="bottom-right" />
+          <Toaster />
           </OnchainProviders>
         </NextUIProvider>
       </body>
