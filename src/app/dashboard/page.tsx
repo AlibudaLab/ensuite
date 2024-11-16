@@ -16,93 +16,21 @@ import {
   Input,
   ModalFooter,
   useDisclosure,
-} from "@nextui-org/react";
-import LoginButton from "src/components/LoginButton";
-import ENSuiteSvg from "src/svg/ENSuiteSvg";
+  Dropdown,
+  Select,
+  SelectItem,
+} from '@nextui-org/react';
+import LoginButton from 'src/components/LoginButton';
+import ENSuiteSvg from 'src/svg/ENSuiteSvg';
+import { PlusIcon, TrashIcon } from '@heroicons/react/16/solid';
 
 import { useAccount, useEnsName } from 'wagmi';
+import { useState } from 'react';
+import { subnameRows, vaultRows } from './utils/DefaultInfo';
 
 export default function Dashboard() {
-  const vaultRows = [
-    {
-      key: "1",
-      name: "Ensuite",
-      deposit: "Deposit",
-      balance: "3,534,251",
-      access: "Manage",
-      txHistory: "Browse",
-    },
-    {
-      key: "2",
-      name: "Operation",
-      deposit: "Deposit",
-      balance: "24,042",
-      access: "Manage",
-      txHistory: "Browse",
-    },
-    {
-      key: "3",
-      name: "DevOp",
-      deposit: "Deposit",
-      balance: "54,825",
-      access: "Manage",
-      txHistory: "Browse",
-    },
-    {
-      key: "4",
-      name: "Marketing",
-      deposit: "Deposit",
-      balance: "3,624",
-      access: "Manage",
-      txHistory: "Browse",
-    },
-    {
-      key: "5",
-      name: "Travel",
-      deposit: "Deposit",
-      balance: "12,678",
-      access: "Manage",
-      txHistory: "Browse",
-    },
-  ];
-
-  const subnameRows = [
-    {
-      key: "1",
-      subname: "ryan.ensuite.eth",
-      email: "ryan@ensuite.com",
-      ensuite: "On",
-      statusClass: "text-green-600",
-    },
-    {
-      key: "2",
-      subname: "nicole.ensuite.eth",
-      email: "nicole@ensuite.com",
-      ensuite: "On",
-      statusClass: "text-green-600",
-    },
-    {
-      key: "3",
-      subname: "hao.ensuite.eth",
-      email: "hao@ensuite.com",
-      ensuite: "Off",
-      statusClass: "text-red-600",
-    },
-    {
-      key: "4",
-      subname: "juno.ensuite.eth",
-      email: "juno@ensuite.com",
-      ensuite: "Off",
-      statusClass: "text-red-600",
-    },
-    {
-      key: "5",
-      subname: "foodchain.ensuite.eth",
-      email: "foodchain@ensuite.com",
-      ensuite: "Off",
-      statusClass: "text-red-600",
-    },
-  ];
+  const [signers, setSigners] = useState([{ name: '', address: '' }]);
+  const [threshold, setThreshold] = useState(1);
 
   const { address } = useAccount();
 
@@ -112,6 +40,34 @@ export default function Dashboard() {
   });
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const addNewSigner = () => {
+    setSigners([...signers, { name: '', address: '' }]);
+  };
+
+  const handleSignerChange = (
+    index: number,
+    field: 'name' | 'address',
+    value: string,
+  ) => {
+    const updatedSigners = [...signers];
+    updatedSigners[index][field] = value;
+    setSigners(updatedSigners);
+  };
+
+  const removeSigner = (index: number) => {
+    if (signers.length > 1) {
+      const updatedSigners = signers.filter((_, i) => i !== index);
+      setSigners(updatedSigners);
+      if (threshold > updatedSigners.length) {
+        setThreshold(updatedSigners.length);
+      }
+    }
+  };
+
+  const handleThresholdChange = (value: string) => {
+    setThreshold(Number(value));
+  };
 
   return (
     <div className="flex h-full w-full flex-col items-center px-4 py-8">
@@ -136,7 +92,11 @@ export default function Dashboard() {
         {/* Tabs Container */}
         <div className="flex justify-center w-full">
           <div className="w-auto mx-auto">
-            <Tabs aria-label="Options" variant="bordered" className="w-full justify-center">
+            <Tabs
+              aria-label="Options"
+              variant="bordered"
+              className="w-full justify-center"
+            >
               <Tab key="vaults" title="Vaults Management">
                 {/* Buttons Toolbar & Table Container */}
                 <div className="flex flex-col items-center mt-6 w-full">
@@ -148,59 +108,159 @@ export default function Dashboard() {
                     <Button onPress={onOpen} color="primary">
                       Create
                     </Button>
+                    {/* Modal for Adding New Vault */}
                     <Modal
-                        isOpen={isOpen}
-                        onOpenChange={onOpenChange}
-                        placement="top-center"
-                        >
-                        <ModalContent>
-                            {(onClose) => (
-                            <>
-                                <ModalHeader className="flex flex-col gap-1">
-                                Create Vault
-                                </ModalHeader>
-                                <ModalBody>
-                                {/* Ethereum Address Input */}
-                                <Input
-                                    autoFocus
-                                    label="Name"
-                                    placeholder="Happy Safe Vault"
-                                    variant="bordered"
-                                />
-                                {/* .eml File Input */}
-                                <Input
-                                    label="Proof Document (.eml)"
-                                    placeholder="Upload your proof document (.eml)"
-                                    variant="bordered"
-                                />
-                                </ModalBody>
-                                <ModalFooter>
-                                <Button color="primary" onPress={onClose}>
-                                    Submit
+                      isOpen={isOpen}
+                      onOpenChange={onOpenChange}
+                      placement="top-center"
+                    >
+                      <ModalContent>
+                        {(onClose) => (
+                          <>
+                            <ModalHeader className="flex flex-col gap-1">
+                              Create a Vault
+                            </ModalHeader>
+                            <ModalBody>
+                              {/* Vault Name Input */}
+                              <Input
+                                autoFocus
+                                label="Vault Name"
+                                placeholder="Happy Safe Vault"
+                                variant="bordered"
+                                fullWidth
+                              />
+
+                              {/* Signers Section */}
+                              <div className="mt-6">
+                                <h3 className="text-lg font-semibold mb-2">
+                                  Who can access this vault?
+                                </h3>
+                                <p className="text-sm text-gray-400 mb-6">
+                                  Add the Ethereum addresses of the people who can
+                                  access this vault. They will be able to execute
+                                  transactions.
+                                </p>
+                                {signers.map((signer, index) => (
+                                  <div
+                                    key={index}
+                                    className="flex flex-col md:flex-row gap-4 mb-4 items-center"
+                                  >
+                                    <div className="flex-1">
+                                      <Input
+                                        label={`ENS ${index + 1}`}
+                                        placeholder={`Chad ${index + 1}`}
+                                        value={signer.name}
+                                        onChange={(e) =>
+                                          handleSignerChange(
+                                            index,
+                                            'name',
+                                            e.target.value,
+                                          )
+                                        }
+                                        fullWidth
+                                      />
+                                    </div>
+                                    {signers.length > 1 && (
+                                      <Button
+                                        color="danger"
+                                        onPress={() => removeSigner(index)}
+                                        className="mt-2 md:mt-0"
+                                      >
+                                        <TrashIcon className="w-5 h-5" />
+                                      </Button>
+                                    )}
+                                  </div>
+                                ))}
+
+                                {/* Add ENS Button */}
+                                <Button
+                                  color="success"
+                                  variant="ghost"
+                                  onPress={addNewSigner}
+                                  startContent={
+                                    <PlusIcon className="w-4 h-4" />
+                                  }
+                                  className="mt-4"
+                                >
+                                  Add another ENS
                                 </Button>
-                                </ModalFooter>
-                            </>
-                            )}
-                        </ModalContent>
+                              </div>
+
+                              {/* Threshold Section */}
+                              <div className="mt-8">
+                                <h3 className="text-lg font-semibold mb-2">
+                                  Threshold of the vault
+                                </h3>
+                                <p className="text-sm text-gray-400 mb-4">
+                                  Any transaction requires the confirmation of:
+                                </p>
+                                <Select
+                                  label="Threshold"
+                                  value={threshold.toString()}
+                                  onChange={(value) =>
+                                    setThreshold(Number(value))
+                                  }
+                                  className="max-w-xs"
+                                  placeholder="Select threshold"
+                                >
+                                  {signers.map((_, index) => (
+                                    <SelectItem
+                                      key={index + 1}
+                                      value={(index + 1).toString()}
+                                    >
+                                      {index + 1} out of {signers.length}{' '}
+                                      signer(s)
+                                    </SelectItem>
+                                  ))}
+                                </Select>
+                              </div>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button color="primary" onPress={onClose}>
+                                Create
+                              </Button>
+                            </ModalFooter>
+                          </>
+                        )}
+                      </ModalContent>
                     </Modal>
                   </div>
                   {/* Vaults Management Table */}
                   <div className="w-full max-w-5xl gap-3 justify-center">
-                    <Table aria-label="Vaults Management Table" selectionMode="multiple" className="w-full">
+                    <Table
+                      aria-label="Vaults Management Table"
+                      selectionMode="multiple"
+                      className="w-full"
+                    >
                       <TableHeader>
-                        <TableColumn key="name" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="name"
+                          className="font-semibold text-gray-700"
+                        >
                           NAME
                         </TableColumn>
-                        <TableColumn key="deposit" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="deposit"
+                          className="font-semibold text-gray-700"
+                        >
                           DEPOSIT
                         </TableColumn>
-                        <TableColumn key="balance" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="balance"
+                          className="font-semibold text-gray-700"
+                        >
                           BALANCE
                         </TableColumn>
-                        <TableColumn key="access" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="access"
+                          className="font-semibold text-gray-700"
+                        >
                           ACCESS
                         </TableColumn>
-                        <TableColumn key="txHistory" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="txHistory"
+                          className="font-semibold text-gray-700"
+                        >
                           TX HISTORY
                         </TableColumn>
                       </TableHeader>
@@ -209,14 +269,20 @@ export default function Dashboard() {
                           <TableRow key={item.key}>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>
-                              <button className="text-blue-600 underline">{item.deposit}</button>
+                              <button className="text-blue-600 underline">
+                                {item.deposit}
+                              </button>
                             </TableCell>
                             <TableCell>{item.balance}</TableCell>
                             <TableCell>
-                              <button className="text-blue-600 underline">{item.access}</button>
+                              <button className="text-blue-600 underline">
+                                {item.access}
+                              </button>
                             </TableCell>
                             <TableCell>
-                              <button className="text-blue-600 underline">{item.txHistory}</button>
+                              <button className="text-blue-600 underline">
+                                {item.txHistory}
+                              </button>
                             </TableCell>
                           </TableRow>
                         )}
@@ -233,35 +299,48 @@ export default function Dashboard() {
                     <Button color="danger" variant="flat" className="mr-2">
                       Revoke
                     </Button>
-                    <Button color="primary">
-                      Issue
-                    </Button>
+                    <Button color="primary">Issue</Button>
                   </div>
                   {/* Vaults Management Table */}
                   <div className="w-full max-w-5xl gap-3 justify-center">
-                    <Table aria-label="Vaults Management Table" selectionMode="multiple" className="w-full">
-                        <TableHeader>
-                        <TableColumn key="subname" className="font-semibold text-gray-700">
-                            SUBNAME
+                    <Table
+                      aria-label="Vaults Management Table"
+                      selectionMode="multiple"
+                      className="w-full"
+                    >
+                      <TableHeader>
+                        <TableColumn
+                          key="subname"
+                          className="font-semibold text-gray-700"
+                        >
+                          SUBNAME
                         </TableColumn>
-                        <TableColumn key="email" className="font-semibold text-gray-700">
-                            EMAIL
+                        <TableColumn
+                          key="email"
+                          className="font-semibold text-gray-700"
+                        >
+                          EMAIL
                         </TableColumn>
-                        <TableColumn key="ensuite" className="font-semibold text-gray-700">
-                            ENSUITE
+                        <TableColumn
+                          key="ensuite"
+                          className="font-semibold text-gray-700"
+                        >
+                          ENSUITE
                         </TableColumn>
-                        </TableHeader>
-                        <TableBody items={subnameRows}>
-                      {(item) => (
-                        <TableRow key={item.key}>
-                          <TableCell>{item.subname}</TableCell>
-                          <TableCell>{item.email}</TableCell>
-                          <TableCell>
-                            <span className={item.statusClass}>{item.ensuite}</span>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
+                      </TableHeader>
+                      <TableBody items={subnameRows}>
+                        {(item) => (
+                          <TableRow key={item.key}>
+                            <TableCell>{item.subname}</TableCell>
+                            <TableCell>{item.email}</TableCell>
+                            <TableCell>
+                              <span className={item.statusClass}>
+                                {item.ensuite}
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
                     </Table>
                   </div>
                 </div>
