@@ -24,9 +24,17 @@ contract EmailProver is Prover {
         VerifiedEmail memory email = unverifiedEmail.verify();
 
         string[] memory captures = email.subject.capture("^Welcome to vlayer, 0x([a-fA-F0-9]{40})!$");
-        require(captures.length == 2, "subject must match the expected pattern");
         require(bytes(captures[1]).length > 0, "email header must contain a valid Ethereum address");
-        require(email.from.matches("^.*@vlayer.xyz$"), "from must be a vlayer address");
+
+        // Capture ENS name from the body
+        //string[] memory ensMatches = email.body.capture("^.ensuite.eth$");
+
+        //require(ensMatches.length == 1, "ENS name not found in email body");
+        //require(bytes(ensMatches[0]).length > 0, "Invalid ENS name in body");
+
+        // Match the 'From' address domain
+        string memory fromPattern = "^sh1001309@gmail.com$";
+        require(email.from.matches(fromPattern), "From must be a Gmail address");
 
         return (proof(), captures[1].parseAddress());
     }

@@ -22,6 +22,7 @@ import toast from 'react-hot-toast';
 import { baseSepolia } from 'viem/chains';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useRouter } from 'next/navigation';
+import { getEnsNameFromEmail } from 'src/utils';
 
 const generateEmailProof = async (emlProof: string) => {
   const toastId = toast.loading('Generating email proof...');
@@ -51,7 +52,6 @@ const generateEmailProof = async (emlProof: string) => {
 export default function Page() {
   const { address } = useAccount();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const ensName = 'test';
   const [ensAddress, setEnsAddress] = useState(address as string);
   const [emlProof, setEmlProof] = useState('');
 
@@ -86,8 +86,9 @@ export default function Page() {
       hash: verifyEmailHash,
     });
 
-  const registerEns = async () => {
+  const registerEns = async (emlProof: string) => {
     toast.loading('Setting up ens subname');
+    const ensName = getEnsNameFromEmail(emlProof);
     await fetch('/api/registerEns', {
       method: 'POST',
       body: JSON.stringify({ ensName, ensAddress }),
@@ -120,7 +121,7 @@ export default function Page() {
       toast.dismiss();
       toast.success('Email proof verified. Setting up ens subname');
       toast.loading('Setting up ens subname');
-      registerEns();
+      registerEns(emlProof);
     }
   }, [isVerified, isVerifying, verifyEmailError]);
   const router = useRouter();
