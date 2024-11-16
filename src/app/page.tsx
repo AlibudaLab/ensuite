@@ -154,8 +154,6 @@ export default function Page() {
                       />
                       {/* .eml File Input */}
                       <Input
-                        type="file"
-                        accept=".eml"
                         label="Proof Document (.eml)"
                         placeholder="Upload your proof document (.eml)"
                         variant="bordered"

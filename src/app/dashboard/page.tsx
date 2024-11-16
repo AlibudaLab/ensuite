@@ -9,14 +9,21 @@ import {
   TableRow,
   TableCell,
   Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  Input,
+  ModalFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 import LoginButton from "src/components/LoginButton";
 import ENSuiteSvg from "src/svg/ENSuiteSvg";
 
-import { useAccount } from 'wagmi';
+import { useAccount, useEnsName } from 'wagmi';
 
 export default function Dashboard() {
-  const rows = [
+  const vaultRows = [
     {
       key: "1",
       name: "Ensuite",
@@ -59,7 +66,52 @@ export default function Dashboard() {
     },
   ];
 
+  const subnameRows = [
+    {
+      key: "1",
+      subname: "ryan.ensuite.eth",
+      email: "ryan@ensuite.com",
+      ensuite: "On",
+      statusClass: "text-green-600",
+    },
+    {
+      key: "2",
+      subname: "nicole.ensuite.eth",
+      email: "nicole@ensuite.com",
+      ensuite: "On",
+      statusClass: "text-green-600",
+    },
+    {
+      key: "3",
+      subname: "hao.ensuite.eth",
+      email: "hao@ensuite.com",
+      ensuite: "Off",
+      statusClass: "text-red-600",
+    },
+    {
+      key: "4",
+      subname: "juno.ensuite.eth",
+      email: "juno@ensuite.com",
+      ensuite: "Off",
+      statusClass: "text-red-600",
+    },
+    {
+      key: "5",
+      subname: "foodchain.ensuite.eth",
+      email: "foodchain@ensuite.com",
+      ensuite: "Off",
+      statusClass: "text-red-600",
+    },
+  ];
+
   const { address } = useAccount();
+
+  const { data: ensName } = useEnsName({
+    address,
+    query: { enabled: Boolean(address) },
+  });
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <div className="flex h-full w-full flex-col items-center px-4 py-8">
@@ -76,7 +128,7 @@ export default function Dashboard() {
       </section>
 
       <section className="text-center mb-10">
-        <p className="text-2xl mt-2 text-gray-600">Hi, ensuite.eth 👋</p>
+        <p className="text-2xl mt-2 text-gray-600">Hi, {ensName} 👋</p>
       </section>
 
       {/* Content Section */}
@@ -93,9 +145,44 @@ export default function Dashboard() {
                     <Button color="danger" variant="flat" className="mr-2">
                       Remove
                     </Button>
-                    <Button color="primary">
-                      Add New
+                    <Button onPress={onOpen} color="primary">
+                      Create
                     </Button>
+                    <Modal
+                        isOpen={isOpen}
+                        onOpenChange={onOpenChange}
+                        placement="top-center"
+                        >
+                        <ModalContent>
+                            {(onClose) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1">
+                                Create Vault
+                                </ModalHeader>
+                                <ModalBody>
+                                {/* Ethereum Address Input */}
+                                <Input
+                                    autoFocus
+                                    label="Name"
+                                    placeholder="Happy Safe Vault"
+                                    variant="bordered"
+                                />
+                                {/* .eml File Input */}
+                                <Input
+                                    label="Proof Document (.eml)"
+                                    placeholder="Upload your proof document (.eml)"
+                                    variant="bordered"
+                                />
+                                </ModalBody>
+                                <ModalFooter>
+                                <Button color="primary" onPress={onClose}>
+                                    Submit
+                                </Button>
+                                </ModalFooter>
+                            </>
+                            )}
+                        </ModalContent>
+                    </Modal>
                   </div>
                   {/* Vaults Management Table */}
                   <div className="w-full max-w-5xl gap-3 justify-center">
@@ -117,7 +204,7 @@ export default function Dashboard() {
                           TX HISTORY
                         </TableColumn>
                       </TableHeader>
-                      <TableBody items={rows}>
+                      <TableBody items={vaultRows}>
                         {(item) => (
                           <TableRow key={item.key}>
                             <TableCell>{item.name}</TableCell>
@@ -153,40 +240,28 @@ export default function Dashboard() {
                   {/* Vaults Management Table */}
                   <div className="w-full max-w-5xl gap-3 justify-center">
                     <Table aria-label="Vaults Management Table" selectionMode="multiple" className="w-full">
-                      <TableHeader>
-                        <TableColumn key="name" className="font-semibold text-gray-700">
-                          NAME
+                        <TableHeader>
+                        <TableColumn key="subname" className="font-semibold text-gray-700">
+                            SUBNAME
                         </TableColumn>
-                        <TableColumn key="deposit" className="font-semibold text-gray-700">
-                          DEPOSIT
+                        <TableColumn key="email" className="font-semibold text-gray-700">
+                            EMAIL
                         </TableColumn>
-                        <TableColumn key="balance" className="font-semibold text-gray-700">
-                          BALANCE
+                        <TableColumn key="ensuite" className="font-semibold text-gray-700">
+                            ENSUITE
                         </TableColumn>
-                        <TableColumn key="access" className="font-semibold text-gray-700">
-                          ACCESS
-                        </TableColumn>
-                        <TableColumn key="txHistory" className="font-semibold text-gray-700">
-                          TX HISTORY
-                        </TableColumn>
-                      </TableHeader>
-                      <TableBody items={rows}>
-                        {(item) => (
-                          <TableRow key={item.key}>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>
-                              <button className="text-blue-600 underline">{item.deposit}</button>
-                            </TableCell>
-                            <TableCell>{item.balance}</TableCell>
-                            <TableCell>
-                              <button className="text-blue-600 underline">{item.access}</button>
-                            </TableCell>
-                            <TableCell>
-                              <button className="text-blue-600 underline">{item.txHistory}</button>
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
+                        </TableHeader>
+                        <TableBody items={subnameRows}>
+                      {(item) => (
+                        <TableRow key={item.key}>
+                          <TableCell>{item.subname}</TableCell>
+                          <TableCell>{item.email}</TableCell>
+                          <TableCell>
+                            <span className={item.statusClass}>{item.ensuite}</span>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
                     </Table>
                   </div>
                 </div>
