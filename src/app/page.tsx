@@ -1,8 +1,10 @@
 'use client';
 import ENSuiteSvg from 'src/svg/ENSuiteSvg';
+import { VLAYER_VERIFIER } from 'src/constants';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
 import LoginButton from '../components/LoginButton';
+import verifierSpec from '../../contracts/out/EmailProofVerifier.sol/EmailProofVerifier.json';
 import {
   Card,
   CardBody,
@@ -17,24 +19,28 @@ import {
   Textarea,
 } from '@nextui-org/react';
 import toast from 'react-hot-toast';
+import { baseSepolia } from 'viem/chains';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
-const verifyEmail = async (ensAddress: string, emlProof: string) => {
-  const toastId = toast.loading('Verifying email...');
+const generateEmailProof = async (emlProof: string) => {
+  const toastId = toast.loading('Generating email proof...');
   try {
-    const response = await fetch('/api/verify', {
+    const response = await fetch('/api/genproof', {
       method: 'POST',
-      body: JSON.stringify({ ensAddress, emlProof }),
+      body: JSON.stringify({ emlProof }),
       headers: {
         'Content-Type': 'application/json',
       },
     });
     if (!response.ok) {
-      toast.error('Failed to verify email');
+      toast.error('Failed to generate email proof');
       return;
     }
-    toast.success('Verified!');
+    const { data } = await response.json();
+
+    return data;
   } catch (error) {
-    toast.error('Failed to verify email');
+    toast.error('Failed to generate email proof');
     console.error('Failed to verify email:', error);
   } finally {
     toast.dismiss(toastId);
@@ -50,6 +56,40 @@ export default function Page() {
   useEffect(() => {
     setEnsAddress(address as string);
   }, [address]);
+
+  // send tansaction
+  const { data: hash, writeContract } = useWriteContract();
+
+  const verifyEmail = async (ensAddress: string, emlProof: string) => {
+    const data = await generateEmailProof(emlProof);
+    if (!data) {
+      return;
+    }
+
+    writeContract({
+      address: VLAYER_VERIFIER,
+      abi: verifierSpec.abi,
+      functionName: 'verify',
+      args: data as readonly unknown[],
+      chain: baseSepolia,
+    });
+  };
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  useEffect(() => {
+    if (isConfirming) {
+      toast.loading('verifying proof onchain.');
+    }
+
+    if (isConfirmed) {
+      toast.dismiss();
+      toast.success('Email proof verified.');
+    }
+  }, [isConfirmed, isConfirming]);
 
   return (
     <div className="flex h-full w-full flex-col items-center px-4">

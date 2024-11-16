@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyEmail } from 'src/service/vlayer';
+import { generateEmailProof } from 'src/service/vlayer';
 
 export async function POST(req: NextRequest): Promise<Response> {
-  const { ensAddress, emlProof } = await req.json();
+  const { emlProof } = await req.json();
   try {
-    await verifyEmail(emlProof);
+    const proof = await generateEmailProof(emlProof);
+    console.log(proof);
+    return NextResponse.json({ data: proof });
   } catch (e) {
     console.error(e);
     return NextResponse.json(
@@ -12,5 +14,4 @@ export async function POST(req: NextRequest): Promise<Response> {
       { status: 400 },
     );
   }
-  return NextResponse.json({ message: 'success' });
 }
