@@ -195,7 +195,7 @@ export default function Page() {
                     </ModalHeader>
                     <ModalBody>
                       {/* Ethereum Address Input */}
-                      <Input                     
+                      <Input
                         label="Ethereum Address"
                         placeholder="Enter your Ethereum address"
                         variant="bordered"

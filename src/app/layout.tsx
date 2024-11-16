@@ -45,8 +45,9 @@ export default function RootLayout({
     <html lang="en" className={`${alegreya.variable}`}>
       <body className="flex items-center justify-center">
         <NextUIProvider>
-          <OnchainProviders>{children}
-          <Toaster />
+          <OnchainProviders>
+            {children}
+            <Toaster />
           </OnchainProviders>
         </NextUIProvider>
       </body>
