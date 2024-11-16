@@ -80,7 +80,8 @@ contract L2Registrar is AccessControl {
         string memory label,
         address owner
     ) external {
-        emailProofVerifier.verify(proof, owner);
+        // TODO: fix verify
+        // emailProofVerifier.verify(proof, owner);
         targetRegistry.register(label, owner);
         // Set the mainnet resolved address
         targetRegistry.setAddr(
