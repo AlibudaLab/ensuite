@@ -70,24 +70,28 @@ import {
   useDisclosure,
   Input,
 } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const { address } = useAccount();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const router = useRouter();
 
   return (
     <div className="flex h-full w-full flex-col items-center px-4">
+      {/* Header Section */}
       <section className="mt-20 mb-6 flex w-full">
         <div className="flex w-full items-center justify-between relative">
           <div className="absolute right-0">{address && <LoginButton />}</div>
           <div className="w-full flex justify-center">
-            <a href="/" title="ensuite">
+            <a href="/" title="ENSuite">
               <ENSuiteSvg />
             </a>
           </div>
         </div>
       </section>
 
+      {/* Main Content Section */}
       <section className="flex flex-col items-center justify-center text-center py-10">
         <p className="font-alegreya text-xl max-w-2xl mb-8 whitespace-pre-line">
           {
@@ -102,9 +106,14 @@ export default function Page() {
               <CardBody className="flex flex-col items-center text-center">
                 <h2 className="font-semibold text-lg mb-2">Log in as Admin</h2>
                 <p className="text-gray-600 mb-4">
-                  This will use your primary ENS to log in
+                  Go to the admin dashboard with current ENS
                 </p>
-                <Button color="primary">Log in</Button>
+                <Button
+                  color="primary"
+                  onPress={() => router.push('/dashboard')}
+                >
+                  Dashboard
+                </Button>
               </CardBody>
             </Card>
 
@@ -115,7 +124,6 @@ export default function Page() {
                   Claim My ENS Subname
                 </h2>
                 <p className="text-gray-600 mb-4">
-                  {' '}
                   Generate the proof with your company email
                 </p>
                 <Button onPress={onOpen} color="primary">
@@ -146,7 +154,6 @@ export default function Page() {
                       />
                       {/* .eml File Input */}
                       <Input
-                        autoFocus
                         label="Proof Document (.eml)"
                         placeholder="Upload your proof document (.eml)"
                         variant="bordered"
