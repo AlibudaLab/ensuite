@@ -7,8 +7,7 @@ import proverSpec from '../../contracts/out/EmailProver.sol/EmailProver.json';
 const generateEmailProof = async (emlProof: string) => {
   const preverifiedEmail = await preverifyEmail(emlProof);
   const config = getConfig();
-  const { chain, ethClient, account, proverUrl, confirmations } =
-    await createContext(config);
+  const { chain, proverUrl } = await createContext(config);
 
   const vlayer = createVlayerClient({
     url: proverUrl,

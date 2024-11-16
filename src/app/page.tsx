@@ -58,7 +58,7 @@ export default function Page() {
   }, [address]);
 
   // send tansaction
-  const { data: hash, writeContract } = useWriteContract();
+  const { data: hash, error, writeContract } = useWriteContract();
 
   const verifyEmail = async (ensAddress: string, emlProof: string) => {
     const data = await generateEmailProof(emlProof);
@@ -81,6 +81,10 @@ export default function Page() {
     });
 
   useEffect(() => {
+    if (error) {
+      toast.error('Failed to verify email');
+    }
+
     if (isConfirming) {
       toast.loading('verifying proof onchain.');
     }
@@ -89,7 +93,7 @@ export default function Page() {
       toast.dismiss();
       toast.success('Email proof verified.');
     }
-  }, [isConfirmed, isConfirming]);
+  }, [isConfirmed, isConfirming, error]);
 
   return (
     <div className="flex h-full w-full flex-col items-center px-4">
