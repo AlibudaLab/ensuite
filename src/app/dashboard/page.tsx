@@ -21,8 +21,8 @@ import toast from 'react-hot-toast';
 import LoginButton from 'src/components/LoginButton';
 import ENSuiteSvg from 'src/svg/ENSuiteSvg';
 import { PlusIcon, TrashIcon } from '@heroicons/react/16/solid';
-import { Tooltip } from "@nextui-org/tooltip";
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { Tooltip } from '@nextui-org/tooltip';
+import { PencilIcon } from '@heroicons/react/24/outline';
 
 import { useAccount, useEnsName, useWaitForTransactionReceipt } from 'wagmi';
 import { useState, useEffect, useCallback } from 'react';
@@ -71,7 +71,11 @@ export default function Dashboard() {
   });
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onOpenChange: onEditOpenChange,
+  } = useDisclosure();
 
   const config = useWagmiConfig();
 
@@ -154,14 +158,14 @@ export default function Dashboard() {
             const balance = await getBalance(config, {
               address: safeAddress as `0x${string}`,
             });
-            
+
             return {
               address: safeAddress,
               balance: formatEther(BigInt(balance.value)),
               symbol: 'ETH',
-              name: vaultNames[safeAddress] || '' // Include the vault name
+              name: vaultNames[safeAddress] || '', // Include the vault name
             };
-          })
+          }),
         );
         setSafeBalances(balances);
       } catch (error) {
@@ -250,12 +254,11 @@ export default function Dashboard() {
 
       // Set the transaction hash to trigger the wait hook
       setTxHash(hash);
-      
+
       // Save the vault name
       if (vaultName && safeAddress) {
         saveVaultName(safeAddress, vaultName);
       }
-
     } catch (error) {
       console.error('Error deploying Safe:', error);
       setIsCreating(false);
@@ -268,14 +271,16 @@ export default function Dashboard() {
       toast.error('Please enter a valid name');
       return;
     }
-    
+
     saveVaultName(editingVault, editingName);
-    
-    setSafeBalances(prev => prev.map(balance => 
-      balance.address === editingVault 
-        ? { ...balance, name: editingName }
-        : balance
-    ));
+
+    setSafeBalances((prev) =>
+      prev.map((balance) =>
+        balance.address === editingVault
+          ? { ...balance, name: editingName }
+          : balance,
+      ),
+    );
 
     setEditingVault(null);
     setEditingName('');
@@ -437,7 +442,9 @@ export default function Dashboard() {
                                 isLoading={isCreating || isTransactionPending}
                                 isDisabled={isCreating || isTransactionPending}
                               >
-                                {isTransactionPending ? 'Creating Vault...' : 'Create Vault'}
+                                {isTransactionPending
+                                  ? 'Creating Vault...'
+                                  : 'Create Vault'}
                               </Button>
                             </ModalFooter>
                           </>
@@ -453,33 +460,54 @@ export default function Dashboard() {
                       className="w-full"
                     >
                       <TableHeader>
-                        <TableColumn key="name" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="name"
+                          className="font-semibold text-gray-700"
+                        >
                           NAME
                         </TableColumn>
-                        <TableColumn key="address" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="address"
+                          className="font-semibold text-gray-700"
+                        >
                           ADDRESS
                         </TableColumn>
-                        <TableColumn key="balance" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="balance"
+                          className="font-semibold text-gray-700"
+                        >
                           BALANCE
                         </TableColumn>
-                        <TableColumn key="actions" className="font-semibold text-gray-700">
+                        <TableColumn
+                          key="actions"
+                          className="font-semibold text-gray-700"
+                        >
                           ACTIONS
                         </TableColumn>
                       </TableHeader>
                       <TableBody>
                         {userSafes.map((safeAddress) => {
-                          const safeBalance = safeBalances.find(sb => sb.address === safeAddress);
+                          const safeBalance = safeBalances.find(
+                            (sb) => sb.address === safeAddress,
+                          );
                           return (
                             <TableRow key={safeAddress}>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <span>{safeBalance?.name || 'Unnamed Vault'}</span>
+                                  <span>
+                                    {safeBalance?.name || 'Unnamed Vault'}
+                                  </span>
                                   <Tooltip content="Edit name">
                                     <Button
                                       isIconOnly
                                       size="sm"
                                       variant="light"
-                                      onPress={() => openEditModal(safeAddress, safeBalance?.name || '')}
+                                      onPress={() =>
+                                        openEditModal(
+                                          safeAddress,
+                                          safeBalance?.name || '',
+                                        )
+                                      }
                                     >
                                       <PencilIcon className="h-4 w-4" />
                                     </Button>
@@ -487,7 +515,7 @@ export default function Dashboard() {
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <a 
+                                <a
                                   href={`${BASESCAN_PREFIX}${safeAddress}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -497,14 +525,19 @@ export default function Dashboard() {
                                 </a>
                               </TableCell>
                               <TableCell>
-                                {safeBalance?.balance || '0'} {safeBalance?.symbol || 'ETH'}
+                                {safeBalance?.balance || '0'}{' '}
+                                {safeBalance?.symbol || 'ETH'}
                               </TableCell>
                               <TableCell>
                                 <div className="flex gap-2">
                                   <Button size="sm" color="primary">
                                     Deposit
                                   </Button>
-                                  <Button size="sm" color="default" isDisabled={true}>
+                                  <Button
+                                    size="sm"
+                                    color="default"
+                                    isDisabled={true}
+                                  >
                                     Manage
                                   </Button>
                                 </div>
@@ -584,10 +617,7 @@ export default function Dashboard() {
       </section>
 
       {/* Edit Name Modal */}
-      <Modal 
-        isOpen={isEditOpen} 
-        onOpenChange={onEditOpenChange}
-      >
+      <Modal isOpen={isEditOpen} onOpenChange={onEditOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -608,8 +638,8 @@ export default function Dashboard() {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Cancel
                 </Button>
-                <Button 
-                  color="primary" 
+                <Button
+                  color="primary"
                   onPress={() => {
                     handleUpdateVaultName();
                     onClose();
