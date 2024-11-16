@@ -25,6 +25,6 @@ DEPLOYED_OUTPUT=$(ETHERSCAN_API_KEY=$ETHERSCAN_API_KEY forge create --json \
                 --verify \
                 --legacy \
                 $CONTRACT_FILE:$CONTRACT_NAME \
-                --constructor-args $REGISTRY_ADDRESS)
+                --constructor-args $REGISTRY_ADDRESS $VERIFIER_ADDRESS)
 
 echo "$DEPLOYED_OUTPUT"
