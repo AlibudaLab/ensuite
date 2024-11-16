@@ -330,4 +330,31 @@ contract L2Registry is ERC721, AccessControl {
             _setContenthash(labelhash, chash);
         }
     }
+
+    // TODO: Disable token transferring
+    // Override transfer-related functions to prevent transfers
+    // function transferFrom(address, address, uint256) public virtual override {
+    //     revert("Transfers not allowed");
+    // }
+
+    // function safeTransferFrom(address, address, uint256) public virtual override {
+    //     revert("Transfers not allowed");
+    // }
+
+    // function safeTransferFrom(address, address, uint256, bytes memory) public virtual override {
+    //     revert("Transfers not allowed");
+    // }
+
+    // function approve(address, uint256) public virtual override {
+    //     revert("Approvals not allowed");
+    // }
+
+    // function setApprovalForAll(address, bool) public pure override {
+    //     revert("Approvals not allowed");
+    // }
+
+    // Add revoke function for admin
+    function revoke(bytes32 labelhash) external onlyRole(ADMIN_ROLE) {
+        setAddr(labelhash, COIN_TYPE_ETH, abi.encodePacked(address(0)));
+    }
 }
