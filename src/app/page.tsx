@@ -23,7 +23,6 @@ import { baseSepolia } from 'viem/chains';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useRouter } from 'next/navigation';
 
-
 const generateEmailProof = async (emlProof: string) => {
   const toastId = toast.loading('Generating email proof...');
   try {
@@ -52,6 +51,7 @@ const generateEmailProof = async (emlProof: string) => {
 export default function Page() {
   const { address } = useAccount();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const ensName = 'test';
   const [ensAddress, setEnsAddress] = useState(address as string);
   const [emlProof, setEmlProof] = useState('');
 
@@ -60,15 +60,19 @@ export default function Page() {
   }, [address]);
 
   // send tansaction
-  const { data: hash, error, writeContract } = useWriteContract();
+  const {
+    data: verifyEmailHash,
+    error: verifyEmailError,
+    writeContract: verifyEmailCall,
+  } = useWriteContract();
 
-  const verifyEmail = async (ensAddress: string, emlProof: string) => {
+  const verifyEmail = async (emlProof: string) => {
     const data = await generateEmailProof(emlProof);
     if (!data) {
       return;
     }
 
-    writeContract({
+    verifyEmailCall({
       address: VLAYER_VERIFIER,
       abi: verifierSpec.abi,
       functionName: 'verify',
@@ -77,25 +81,48 @@ export default function Page() {
     });
   };
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+  const { isLoading: isVerifying, isSuccess: isVerified } =
     useWaitForTransactionReceipt({
-      hash,
+      hash: verifyEmailHash,
     });
 
+  const registerEns = async () => {
+    toast.loading('Setting up ens subname');
+    await fetch('/api/registerEns', {
+      method: 'POST',
+      body: JSON.stringify({ ensName, ensAddress }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then(() => {
+        toast.dismiss();
+        toast.success('ENS subname registered successfully');
+      })
+      .catch((error) => {
+        toast.dismiss();
+        toast.error('Failed to register ENS subname');
+        console.error('Failed to register ENS:', error);
+      });
+  };
+
   useEffect(() => {
-    if (error) {
+    if (verifyEmailError) {
       toast.error('Failed to verify email');
     }
 
-    if (isConfirming) {
+    if (isVerifying) {
       toast.loading('verifying proof onchain.');
     }
 
-    if (isConfirmed) {
+    if (isVerified) {
       toast.dismiss();
-      toast.success('Email proof verified.');
+      toast.success('Email proof verified. Setting up ens subname');
+      toast.loading('Setting up ens subname');
+      registerEns();
     }
-  }, [isConfirmed, isConfirming, error]);
+  }, [isVerified, isVerifying, verifyEmailError]);
   const router = useRouter();
 
   return (
@@ -189,7 +216,7 @@ export default function Page() {
                       <Button
                         color="primary"
                         onPress={onClose}
-                        onClick={() => verifyEmail(ensAddress, emlProof)}
+                        onClick={() => verifyEmail(emlProof)}
                       >
                         Submit
                       </Button>

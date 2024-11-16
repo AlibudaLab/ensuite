@@ -1,4 +1,4 @@
-import { VLAYER_PROVER, } from 'src/constants';
+import { VLAYER_PROVER } from 'src/constants';
 import type { Abi } from 'viem';
 import { createVlayerClient, preverifyEmail } from '@vlayer/sdk';
 import { getConfig, createContext } from '@vlayer/sdk/config';

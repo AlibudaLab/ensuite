@@ -136,9 +136,9 @@ export default function Dashboard() {
                                   Who can access this vault?
                                 </h3>
                                 <p className="text-sm text-gray-400 mb-6">
-                                  Add the Ethereum addresses of the people who can
-                                  access this vault. They will be able to execute
-                                  transactions.
+                                  Add the Ethereum addresses of the people who
+                                  can access this vault. They will be able to
+                                  execute transactions.
                                 </p>
                                 {signers.map((signer, index) => (
                                   <div
