@@ -5,6 +5,7 @@ import './global.css';
 import '@coinbase/onchainkit/styles.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import dynamic from 'next/dynamic';
+import { Toaster } from 'react-hot-toast';
 
 import { NextUIProvider } from '@nextui-org/react';
 import { Alegreya } from 'next/font/google';
@@ -42,6 +43,7 @@ export default function RootLayout({
 }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${alegreya.variable}`}>
+      <Toaster />
       <body className="flex items-center justify-center">
         <NextUIProvider>
           <OnchainProviders>{children}</OnchainProviders>

@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.33.6",
+    "@vlayer/sdk": "^0.1.0-nightly-20241115-70dfc11",
+    "fs": "^0.0.1-security",
     "@nextui-org/react": "^2.4.8",
     "@safe-global/api-kit": "^2.5.4",
     "@safe-global/protocol-kit": "^5.0.4",
@@ -28,7 +30,10 @@
     "permissionless": "^0.1.26",
     "react": "^18",
     "react-dom": "^18",
-    "siwe": "^2.3.2"
+    "react-hot-toast": "^2.4.1",
+    "siwe": "^2.3.2",
+    "viem": "^2.21.45",
+    "wagmi": "^2.12.33"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",
