@@ -1,63 +1,10 @@
-// 'use client';
-// // import Footer from 'src/components/Footer';
-// // import TransactionWrapper from 'src/components/TransactionWrapper';
-// // import WalletWrapper from 'src/components/WalletWrapper';
-// // import { ONCHAINKIT_LINK } from 'src/links';
-// // import OnchainkitSvg from 'src/svg/OnchainkitSvg';
-// import ENSuiteSvg from 'src/svg/ENSuiteSvg';
-// import { useAccount } from 'wagmi';
-// import LoginButton from '../components/LoginButton';
-// // import SignupButton from '../components/SignupButton';
-
-// export default function Page() {
-//   const { address } = useAccount();
-
-//   return (
-//     <div className="flex h-full w-96 max-w-full flex-col px-1 md:w-[1008px]">
-//       <section className="mt-20 mb-6 flex w-full">
-//         <div className="flex w-full items-center justify-between relative">
-//           <div className="absolute right-0">
-//             <LoginButton />
-//           </div>
-//           <div className="w-full flex justify-center">
-//             <a href="/" title="ensuite">
-//               <ENSuiteSvg />
-//             </a>
-//           </div>
-//         </div>
-//       </section>
-
-//       <section className="flex flex-col items-center justify-center text-center py-20">
-//         <p className="font-alegreya text-xl max-w-2xl mb-12 whitespace-pre-line">
-//           {"Effortless expense management: ENS-powered vaults and\nsub-names for streamlined company spending."}
-//         </p>
-//       </section>
-//       {/* <section className="templateSection flex w-full flex-col items-center justify-center gap-4 rounded-xl bg-gray-100 px-2 py-4 md:grow">
-//         <div className="flex h-[450px] w-[450px] max-w-full items-center justify-center rounded-xl bg-[#030712]">
-//           <div className="rounded-xl bg-[#F3F4F6] px-4 py-[11px]">
-//             <p className="font-normal text-indigo-600 text-xl not-italic tracking-[-1.2px]">
-//               npm install @coinbase/onchainkit
-//             </p>
-//           </div>
-//         </div>
-//         {address ? (
-//           <TransactionWrapper address={address} />
-//         ) : (
-//           <WalletWrapper
-//             className="w-[450px] max-w-full"
-//             text="Sign in to transact"
-//           />
-//         )}
-//       </section> */}
-//       {/* <Footer /> */}
-//     </div>
-//   );
-// }
-
 'use client';
 import ENSuiteSvg from 'src/svg/ENSuiteSvg';
+import { VLAYER_VERIFIER } from 'src/constants';
 import { useAccount } from 'wagmi';
+import { useEffect, useState } from 'react';
 import LoginButton from '../components/LoginButton';
+import verifierSpec from '../web3/contracts/EmailProofVerifier.json';
 import {
   Card,
   CardBody,
@@ -69,12 +16,86 @@ import {
   ModalFooter,
   useDisclosure,
   Input,
+  Textarea,
 } from '@nextui-org/react';
+import toast from 'react-hot-toast';
+import { baseSepolia } from 'viem/chains';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useRouter } from 'next/navigation';
+
+
+const generateEmailProof = async (emlProof: string) => {
+  const toastId = toast.loading('Generating email proof...');
+  try {
+    const response = await fetch('/api/genproof', {
+      method: 'POST',
+      body: JSON.stringify({ emlProof }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      toast.error('Failed to generate email proof');
+      return;
+    }
+    const { data } = await response.json();
+
+    return data;
+  } catch (error) {
+    toast.error('Failed to generate email proof');
+    console.error('Failed to verify email:', error);
+  } finally {
+    toast.dismiss(toastId);
+  }
+};
 
 export default function Page() {
   const { address } = useAccount();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [ensAddress, setEnsAddress] = useState(address as string);
+  const [emlProof, setEmlProof] = useState('');
+
+  useEffect(() => {
+    setEnsAddress(address as string);
+  }, [address]);
+
+  // send tansaction
+  const { data: hash, error, writeContract } = useWriteContract();
+
+  const verifyEmail = async (ensAddress: string, emlProof: string) => {
+    const data = await generateEmailProof(emlProof);
+    if (!data) {
+      return;
+    }
+
+    writeContract({
+      address: VLAYER_VERIFIER,
+      abi: verifierSpec.abi,
+      functionName: 'verify',
+      args: data as readonly unknown[],
+      chain: baseSepolia,
+    });
+  };
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  useEffect(() => {
+    if (error) {
+      toast.error('Failed to verify email');
+    }
+
+    if (isConfirming) {
+      toast.loading('verifying proof onchain.');
+    }
+
+    if (isConfirmed) {
+      toast.dismiss();
+      toast.success('Email proof verified.');
+    }
+  }, [isConfirmed, isConfirming, error]);
   const router = useRouter();
 
   return (
@@ -147,20 +168,29 @@ export default function Page() {
                     <ModalBody>
                       {/* Ethereum Address Input */}
                       <Input
-                        autoFocus
+                        autoFocus={true}
                         label="Ethereum Address"
                         placeholder="Enter your Ethereum address"
                         variant="bordered"
+                        value={ensAddress}
+                        onValueChange={setEnsAddress}
                       />
                       {/* .eml File Input */}
-                      <Input
+                      <Textarea
+                        autoFocus={true}
                         label="Proof Document (.eml)"
                         placeholder="Upload your proof document (.eml)"
                         variant="bordered"
+                        value={emlProof}
+                        onValueChange={setEmlProof}
                       />
                     </ModalBody>
                     <ModalFooter>
-                      <Button color="primary" onPress={onClose}>
+                      <Button
+                        color="primary"
+                        onPress={onClose}
+                        onClick={() => verifyEmail(ensAddress, emlProof)}
+                      >
                         Submit
                       </Button>
                     </ModalFooter>
