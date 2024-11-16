@@ -1,6 +1,6 @@
 'use client'
 
-import { DeployVault } from './vault/deploy'
+import { DeployVault } from '../service/safe/deploy'
 import { useAccount } from 'wagmi'
 
 export default function TestDeployPage() {

@@ -1,24 +1,14 @@
 'use client'
-
 import Safe, {
     PredictedSafeProps,
     SafeAccountConfig,
 } from '@safe-global/protocol-kit'
 import { baseSepolia } from 'viem/chains'
 import { 
-    useAccount, 
     usePublicClient, 
-    useWalletClient,
 } from 'wagmi'
-import { useState } from 'react'
 
-export const DeployVault = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string>('');
-    const [deployedSafeAddress, setDeployedSafeAddress] = useState<string>('');
-
-    const { address: userAddress } = useAccount();
-    const { data: walletClient } = useWalletClient();
+const deployVault = async() => {
     const publicClient = usePublicClient();
 
     const createSafeAccount = async () => {
@@ -80,21 +70,9 @@ export const DeployVault = () => {
                 safeOwners,
                 safeThreshold
             });
-
-            setDeployedSafeAddress(safeAddress);
-
         } catch (err) {
             console.error('Error deploying Safe:', err);
-            setError(err instanceof Error ? err.message : 'Failed to deploy Safe');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return {
-        createSafeAccount,
-        deployedSafeAddress,
-        loading,
-        error
+            
+        } 
     };
 };
