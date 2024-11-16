@@ -19,6 +19,7 @@
   "dependencies": {
     "@coinbase/onchainkit": "^0.33.6",
     "@nextui-org/react": "^2.4.8",
+    "@safe-global/protocol-kit": "^5.0.4",
     "framer-motion": "^11.11.17",
     "next": "^14.2.5",
     "permissionless": "^0.1.26",
