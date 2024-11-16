@@ -4,7 +4,7 @@ import { VLAYER_VERIFIER } from 'src/constants';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
 import LoginButton from '../components/LoginButton';
-import verifierSpec from '../../contracts/out/EmailProofVerifier.sol/EmailProofVerifier.json';
+import verifierSpec from '../web3/contracts/EmailProofVerifier.json';
 import {
   Card,
   CardBody,
