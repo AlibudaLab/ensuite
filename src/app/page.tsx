@@ -58,7 +58,18 @@
 import ENSuiteSvg from 'src/svg/ENSuiteSvg';
 import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
-import { Card, CardBody, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Input } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Input,
+} from '@nextui-org/react';
 
 export default function Page() {
   const { address } = useAccount();
@@ -68,9 +79,7 @@ export default function Page() {
     <div className="flex h-full w-full flex-col items-center px-4">
       <section className="mt-20 mb-6 flex w-full">
         <div className="flex w-full items-center justify-between relative">
-          <div className="absolute right-0">
-            {address && <LoginButton />}
-          </div>
+          <div className="absolute right-0">{address && <LoginButton />}</div>
           <div className="w-full flex justify-center">
             <a href="/" title="ensuite">
               <ENSuiteSvg />
@@ -81,7 +90,9 @@ export default function Page() {
 
       <section className="flex flex-col items-center justify-center text-center py-10">
         <p className="font-alegreya text-xl max-w-2xl mb-8 whitespace-pre-line">
-          {"Effortless expense management: ENS-powered vaults and\nsub-names for streamlined company spending."}
+          {
+            'Effortless expense management: ENS-powered vaults and\nsub-names for streamlined company spending.'
+          }
         </p>
 
         {address ? (
@@ -90,18 +101,23 @@ export default function Page() {
             <Card className="w-full">
               <CardBody className="flex flex-col items-center text-center">
                 <h2 className="font-semibold text-lg mb-2">Log in as Admin</h2>
-                <p className="text-gray-600 mb-4">This will use your primary ENS to log in</p>
-                <Button color="primary">
-                  Log in
-                </Button>
+                <p className="text-gray-600 mb-4">
+                  This will use your primary ENS to log in
+                </p>
+                <Button color="primary">Log in</Button>
               </CardBody>
             </Card>
 
             {/* Claim My ENS Subname Card */}
             <Card className="w-full">
               <CardBody className="flex flex-col items-center text-center">
-                <h2 className="font-semibold text-lg mb-2">Claim My ENS Subname</h2>
-                <p className="text-gray-600 mb-4"> Generate the proof with your company email</p>
+                <h2 className="font-semibold text-lg mb-2">
+                  Claim My ENS Subname
+                </h2>
+                <p className="text-gray-600 mb-4">
+                  {' '}
+                  Generate the proof with your company email
+                </p>
                 <Button onPress={onOpen} color="primary">
                   Upload the Proof
                 </Button>
@@ -109,11 +125,17 @@ export default function Page() {
             </Card>
 
             {/* Modal for Upload the Proof */}
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+            <Modal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              placement="top-center"
+            >
               <ModalContent>
                 {(onClose) => (
                   <>
-                    <ModalHeader className="flex flex-col gap-1">Upload Proof</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Upload Proof
+                    </ModalHeader>
                     <ModalBody>
                       {/* Ethereum Address Input */}
                       <Input
