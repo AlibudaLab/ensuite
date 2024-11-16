@@ -5,6 +5,7 @@ import './global.css';
 import '@coinbase/onchainkit/styles.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import dynamic from 'next/dynamic';
+import {Toaster} from 'react-hot-toast';
 
 const OnchainProviders = dynamic(
   () => import('src/components/OnchainProviders'),
@@ -33,6 +34,7 @@ export default function RootLayout({
 }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <Toaster/>
       <body className="flex items-center justify-center">
         <OnchainProviders>{children}</OnchainProviders>
       </body>

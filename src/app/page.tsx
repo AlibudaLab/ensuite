@@ -7,6 +7,8 @@ import OnchainkitSvg from 'src/svg/OnchainkitSvg';
 import { useAccount } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
+import VerifyButton from 'src/components/VerifyButton';
+
 
 export default function Page() {
   const { address } = useAccount();
@@ -46,6 +48,7 @@ export default function Page() {
           />
         )}
       </section>
+      <VerifyButton/>
       <Footer />
     </div>
   );

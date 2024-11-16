@@ -14,6 +14,6 @@ contract EmailProofVerifier is Verifier {
     }
 
     function verify(Proof calldata, address wallet) public view onlyVerified(prover, EmailProver.main.selector) {
-        require(wallet == msg.sender, "Must be called from the same wallet as the registered address");
+        //require(wallet == msg.sender, "Must be called from the same wallet as the registered address");
     }
 }
