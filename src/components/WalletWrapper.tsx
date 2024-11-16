@@ -56,10 +56,10 @@ export default function WalletWrapper({
         </ConnectWallet>
         <WalletDropdown>
           <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick={true}>
-            <Address /> 
+            <Address />
           </Identity>
           <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick={true}>
-            <EthBalance /> 
+            <EthBalance />
           </Identity>
           {/* <WalletDropdownBasename /> */}
           {/* <WalletDropdownLink icon="wallet" href="https://wallet.coinbase.com">
