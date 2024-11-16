@@ -16,23 +16,25 @@ import {
   Input,
   ModalFooter,
   useDisclosure,
-  Dropdown,
-  Select,
-  SelectItem,
 } from '@nextui-org/react';
 import LoginButton from 'src/components/LoginButton';
 import ENSuiteSvg from 'src/svg/ENSuiteSvg';
 import { PlusIcon, TrashIcon } from '@heroicons/react/16/solid';
 
 import { useAccount, useEnsName } from 'wagmi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { subnameRows, vaultRows } from './utils/DefaultInfo';
+
+import Safe, { type PredictedSafeProps } from '@safe-global/protocol-kit';
+import SafeApiKit from '@safe-global/api-kit';
+import { baseSepolia } from 'viem/chains';
 
 export default function Dashboard() {
   const [signers, setSigners] = useState([{ name: '', address: '' }]);
-  const [threshold, setThreshold] = useState(1);
+  const [threshold, setThreshold] = useState('1');
+  const [userSafes, setUserSafes] = useState<any[]>([]);
 
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
 
   const { data: ensName } = useEnsName({
     address,
@@ -40,6 +42,26 @@ export default function Dashboard() {
   });
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  useEffect(() => {
+    const fetchUserSafes = async () => {
+      if (!address) return;
+
+      try {
+        const apiKit = new SafeApiKit({
+          chainId: BigInt(chain?.id || 8453),
+        });
+
+        const safes = await apiKit.getSafesByOwner(address);
+        console.log('User Safes:', safes);
+        setUserSafes(safes.safes);
+      } catch (error) {
+        console.error('Error fetching safes:', error);
+      }
+    };
+
+    fetchUserSafes();
+  }, [address]);
 
   const addNewSigner = () => {
     setSigners([...signers, { name: '', address: '' }]);
@@ -59,14 +81,76 @@ export default function Dashboard() {
     if (signers.length > 1) {
       const updatedSigners = signers.filter((_, i) => i !== index);
       setSigners(updatedSigners);
-      if (threshold > updatedSigners.length) {
-        setThreshold(updatedSigners.length);
+      if (Number.parseInt(threshold) > updatedSigners.length) {
+        setThreshold(updatedSigners.length.toString());
       }
     }
   };
 
-  const handleThresholdChange = (value: string) => {
-    setThreshold(Number(value));
+  const handleCreateVault = async () => {
+    try {
+      // Owners are the addresses from the signers list
+      const owners = signers.map((signer) => signer.name);
+      console.log('Signers: ', signers);
+
+      const safeAccountConfig = {
+        owners: owners,
+        threshold: Number.parseInt(threshold),
+      };
+
+      // Safe deployment configuration
+      const predictedSafe: PredictedSafeProps = {
+        safeAccountConfig,
+        safeDeploymentConfig: {
+          // saltNonce can be added if necessary
+        },
+      };
+
+      console.log('Creating vault with signers:', owners);
+      console.log('Threshold:', threshold);
+
+      // Initialize Safe
+      let protocolKit = await Safe.init({
+        provider: window.ethereum,
+        signer: address,
+        predictedSafe,
+      });
+
+      // Predict the address for Safe
+      const safeAddress = await protocolKit.getAddress();
+      console.log('Predicted Safe Address:', safeAddress);
+
+      // Create deployment transaction
+      const deploymentTransaction =
+        await protocolKit.createSafeDeploymentTransaction();
+
+      // Execute deployment transaction using integrated signer
+      const client = await protocolKit.getSafeProvider().getExternalSigner();
+      if (!client) throw new Error('Failed to get signer');
+
+      const txHash = await client.sendTransaction({
+        to: deploymentTransaction.to,
+        value: BigInt(deploymentTransaction.value),
+        data: deploymentTransaction.data as `0x${string}`,
+        chain: baseSepolia,
+      });
+
+      // Wait for the transaction to be mined
+      // const txReceipt = await client.waitForTransactionReceipt({ hash: txHash });
+
+      // Reconnect to the newly deployed Safe using the protocol-kit
+      protocolKit = await protocolKit.connect({ safeAddress });
+
+      // Confirm deployment and log properties
+      console.log('Is Safe deployed:', await protocolKit.isSafeDeployed());
+      console.log('Safe Address:', await protocolKit.getAddress());
+      console.log('Safe Owners:', await protocolKit.getOwners());
+      console.log('Safe Threshold:', await protocolKit.getThreshold());
+      alert(`Your Safe has been deployed:\n${safeAddress}`);
+    } catch (error) {
+      console.error('Error deploying Safe:', error);
+      alert('Failed to deploy Safe. Check the console for more details.');
+    }
   };
 
   return (
@@ -102,7 +186,12 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center mt-6 w-full">
                   {/* Buttons Toolbar */}
                   <div className="flex justify-end w-full max-w-5xl mb-4">
-                    <Button color="danger" variant="flat" className="mr-2">
+                    <Button
+                      color="danger"
+                      variant="flat"
+                      className="mr-2"
+                      isDisabled={true}
+                    >
                       Remove
                     </Button>
                     <Button onPress={onOpen} color="primary">
@@ -123,11 +212,11 @@ export default function Dashboard() {
                             <ModalBody>
                               {/* Vault Name Input */}
                               <Input
-                                autoFocus
+                                autoFocus={true}
                                 label="Vault Name"
                                 placeholder="Happy Safe Vault"
                                 variant="bordered"
-                                fullWidth
+                                fullWidth={true}
                               />
 
                               {/* Signers Section */}
@@ -157,7 +246,7 @@ export default function Dashboard() {
                                             e.target.value,
                                           )
                                         }
-                                        fullWidth
+                                        fullWidth={true}
                                       />
                                     </div>
                                     {signers.length > 1 && (
@@ -194,29 +283,23 @@ export default function Dashboard() {
                                 <p className="text-sm text-gray-400 mb-4">
                                   Any transaction requires the confirmation of:
                                 </p>
-                                <Select
+                                <Input
+                                  type="number"
                                   label="Threshold"
-                                  value={threshold.toString()}
-                                  onChange={(value) =>
-                                    setThreshold(Number(value))
-                                  }
+                                  min={1}
+                                  max={signers.length}
+                                  value={threshold}
+                                  onChange={(e) => setThreshold(e.target.value)}
                                   className="max-w-xs"
                                   placeholder="Select threshold"
-                                >
-                                  {signers.map((_, index) => (
-                                    <SelectItem
-                                      key={index + 1}
-                                      value={(index + 1).toString()}
-                                    >
-                                      {index + 1} out of {signers.length}{' '}
-                                      signer(s)
-                                    </SelectItem>
-                                  ))}
-                                </Select>
+                                />
                               </div>
                             </ModalBody>
                             <ModalFooter>
-                              <Button color="primary" onPress={onClose}>
+                              <Button
+                                color="primary"
+                                onPress={handleCreateVault}
+                              >
                                 Create
                               </Button>
                             </ModalFooter>
@@ -296,10 +379,17 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center mt-6 w-full">
                   {/* Buttons Toolbar */}
                   <div className="flex justify-end w-full max-w-5xl mb-4">
-                    <Button color="danger" variant="flat" className="mr-2">
+                    <Button
+                      color="danger"
+                      variant="flat"
+                      className="mr-2"
+                      isDisabled={true}
+                    >
                       Revoke
                     </Button>
-                    <Button color="primary">Issue</Button>
+                    <Button color="primary" isDisabled={true}>
+                      Issue
+                    </Button>
                   </div>
                   {/* Vaults Management Table */}
                   <div className="w-full max-w-5xl gap-3 justify-center">

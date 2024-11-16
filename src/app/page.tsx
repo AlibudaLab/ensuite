@@ -195,8 +195,7 @@ export default function Page() {
                     </ModalHeader>
                     <ModalBody>
                       {/* Ethereum Address Input */}
-                      <Input
-                        autoFocus={true}
+                      <Input                     
                         label="Ethereum Address"
                         placeholder="Enter your Ethereum address"
                         variant="bordered"
@@ -205,7 +204,6 @@ export default function Page() {
                       />
                       {/* .eml File Input */}
                       <Textarea
-                        autoFocus={true}
                         label="Proof Document (.eml)"
                         placeholder="Upload your proof document (.eml)"
                         variant="bordered"
