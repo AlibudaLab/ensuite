@@ -1,5 +1,5 @@
 'use client';
-import Footer from 'src/components/Footer';
+// import Footer from 'src/components/Footer';
 import TransactionWrapper from 'src/components/TransactionWrapper';
 import WalletWrapper from 'src/components/WalletWrapper';
 import { ONCHAINKIT_LINK } from 'src/links';
@@ -46,7 +46,7 @@ export default function Page() {
           />
         )}
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
