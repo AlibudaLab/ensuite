@@ -15,6 +15,8 @@ import {
   WalletDropdownFundLink,
   WalletDropdownLink,
 } from '@coinbase/onchainkit/wallet';
+import { useAccount, useEnsName } from 'wagmi'
+import { sepolia } from 'viem/chains';
 
 type WalletWrapperParams = {
   text?: string;
@@ -26,6 +28,12 @@ export default function WalletWrapper({
   text,
   withWalletAggregator = false,
 }: WalletWrapperParams) {
+  const { address } = useAccount()
+  const {data: ensName} = useEnsName({
+    address: address,
+    query: { enabled: Boolean(address) },
+  })
+
   return (
     <>
       <Wallet>
@@ -44,11 +52,11 @@ export default function WalletWrapper({
             <Address />
             <EthBalance />
           </Identity>
-          <WalletDropdownBasename />
-          <WalletDropdownLink icon="wallet" href="https://wallet.coinbase.com">
+          {/* <WalletDropdownBasename /> */}
+          {/* <WalletDropdownLink icon="wallet" href="https://wallet.coinbase.com">
             Go to Wallet Dashboard
-          </WalletDropdownLink>
-          <WalletDropdownFundLink />
+          </WalletDropdownLink> */}
+          {/* <WalletDropdownFundLink /> */}
           <WalletDropdownDisconnect />
         </WalletDropdown>
       </Wallet>
