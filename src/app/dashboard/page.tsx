@@ -16,6 +16,7 @@ import {
   Input,
   ModalFooter,
   useDisclosure,
+  Chip,
 } from '@nextui-org/react';
 import toast from 'react-hot-toast';
 import LoginButton from 'src/components/LoginButton';
@@ -24,7 +25,14 @@ import { PlusIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { Tooltip } from '@nextui-org/tooltip';
 import { PencilIcon } from '@heroicons/react/24/outline';
 
-import { useAccount, useEnsName, useWaitForTransactionReceipt } from 'wagmi';
+import { formatAmount } from '@coinbase/onchainkit/token';
+
+import {
+  useAccount,
+  useEnsName,
+  useWaitForTransactionReceipt,
+  useSendTransaction,
+} from 'wagmi';
 import { useState, useEffect, useCallback } from 'react';
 import { subnameRows } from './utils/DefaultInfo';
 
@@ -32,8 +40,8 @@ import Safe, { type PredictedSafeProps } from '@safe-global/protocol-kit';
 import SafeApiKit from '@safe-global/api-kit';
 import { baseSepolia, sepolia } from 'viem/chains';
 import { getBalance } from '@wagmi/core';
-import { formatEther } from 'viem';
 import { useWagmiConfig } from 'src/wagmi';
+import { formatEther, parseEther } from 'viem';
 
 // Add this constant for the BaseScan URL
 const BASESCAN_PREFIX = 'https://sepolia.basescan.org/address/';
@@ -61,6 +69,8 @@ export default function Dashboard() {
   const [editingName, setEditingName] = useState<string>('');
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>();
   const [isCreating, setIsCreating] = useState(false);
+  const [depositAmount, setDepositAmount] = useState('');
+  const [depositAddress, setDepositAddress] = useState<string>('');
 
   const { address } = useAccount();
 
@@ -76,8 +86,19 @@ export default function Dashboard() {
     onOpen: onEditOpen,
     onOpenChange: onEditOpenChange,
   } = useDisclosure();
+  const {
+    isOpen: isDepositOpen,
+    onOpen: onDepositOpen,
+    onOpenChange: onDepositOpenChange,
+  } = useDisclosure();
 
   const config = useWagmiConfig();
+
+  const {
+    data: depositHash,
+    isPending: isDepositPending,
+    sendTransaction,
+  } = useSendTransaction();
 
   // Extract fetchUserSafes to a reusable function
   const fetchUserSafes = useCallback(async () => {
@@ -157,16 +178,20 @@ export default function Dashboard() {
           userSafes.map(async (safeAddress) => {
             const balance = await getBalance(config, {
               address: safeAddress as `0x${string}`,
+              chainId: baseSepolia.id,
             });
 
             return {
               address: safeAddress,
-              balance: formatEther(BigInt(balance.value)),
+              balance: formatAmount(formatEther(BigInt(balance.value)), {
+                minimumFractionDigits: 5,
+              }),
               symbol: 'ETH',
               name: vaultNames[safeAddress] || '', // Include the vault name
             };
           }),
         );
+        console.log('Balances: ', balances);
         setSafeBalances(balances);
       } catch (error) {
         console.error('Error fetching balances:', error);
@@ -292,6 +317,27 @@ export default function Dashboard() {
     setEditingName(currentName || '');
     onEditOpen();
   };
+
+  const handleDeposit = async () => {
+    try {
+      sendTransaction({
+        to: depositAddress as `0x${string}`,
+        value: parseEther(depositAmount),
+      });
+    } catch (error) {
+      console.error('Error sending transaction:', error);
+      toast.error('Failed to send transaction');
+    }
+  };
+
+  // Add this to watch for deposit success
+  useEffect(() => {
+    if (depositHash) {
+      toast.success('Deposit transaction sent!');
+      onDepositOpenChange();
+      setDepositAmount('');
+    }
+  }, [depositHash]);
 
   return (
     <div className="flex h-full w-full flex-col items-center px-4 py-8">
@@ -530,7 +576,14 @@ export default function Dashboard() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex gap-2">
-                                  <Button size="sm" color="primary">
+                                  <Button
+                                    size="sm"
+                                    color="primary"
+                                    onPress={() => {
+                                      setDepositAddress(safeAddress);
+                                      onDepositOpen();
+                                    }}
+                                  >
                                     Deposit
                                   </Button>
                                   <Button
@@ -600,9 +653,7 @@ export default function Dashboard() {
                             <TableCell>{item.subname}</TableCell>
                             <TableCell>{item.email}</TableCell>
                             <TableCell>
-                              <span className={item.statusClass}>
-                                {item.ensuite}
-                              </span>
+                              <Chip color="success">On</Chip>
                             </TableCell>
                           </TableRow>
                         )}
@@ -646,6 +697,42 @@ export default function Dashboard() {
                   }}
                 >
                   Save
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isDepositOpen} onOpenChange={onDepositOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Deposit ETH
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  type="number"
+                  label="Amount (ETH)"
+                  placeholder="0.01"
+                  value={depositAmount}
+                  onChange={(e) => setDepositAmount(e.target.value)}
+                  step="0.001"
+                  min="0"
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  onPress={handleDeposit}
+                  isLoading={isDepositPending}
+                  isDisabled={!depositAmount || isDepositPending}
+                >
+                  {isDepositPending ? 'Depositing...' : 'Deposit'}
                 </Button>
               </ModalFooter>
             </>
