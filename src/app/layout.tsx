@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'ENSuite',
     description: 'Built by Alibuda Lab',
-    images: [`${NEXT_PUBLIC_URL}/img/ENSuiteLogo.png`],
+    images: [`${NEXT_PUBLIC_URL}/imgs/ENSuiteLogo.png`],
   },
 };
 
