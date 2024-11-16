@@ -65,7 +65,7 @@ ul {
 }
 
 .ockConnectWallet_Container span {
-  color: #030712;
+  color: white !important;
 }
 
 /* i believe this is necessary because 

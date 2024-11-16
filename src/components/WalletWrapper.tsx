@@ -9,6 +9,7 @@ import {
 import { useAccount, useEnsAvatar, useEnsName } from 'wagmi';
 import { normalize } from 'viem/ens';
 import { User } from '@nextui-org/user';
+import { sepolia } from 'viem/chains';
 
 type WalletWrapperParams = {
   text?: string;
@@ -23,10 +24,12 @@ export default function WalletWrapper({
   const { address } = useAccount();
   const { data: ensName } = useEnsName({
     address,
+    chainId: sepolia.id,
     query: { enabled: Boolean(address) },
   });
   const { data: ensAvatar } = useEnsAvatar({
     name: normalize(ensName ?? ''),
+    chainId: sepolia.id,
     query: { enabled: Boolean(address) },
   });
 

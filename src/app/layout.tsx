@@ -43,10 +43,11 @@ export default function RootLayout({
 }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${alegreya.variable}`}>
-      <Toaster />
       <body className="flex items-center justify-center">
         <NextUIProvider>
-          <OnchainProviders>{children}</OnchainProviders>
+          <OnchainProviders>{children}
+          <Toaster position="bottom-right" />
+          </OnchainProviders>
         </NextUIProvider>
       </body>
     </html>
