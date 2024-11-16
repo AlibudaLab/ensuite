@@ -1,0 +1,80 @@
+export const vaultRows = [
+  {
+    key: '1',
+    name: 'Ensuite',
+    deposit: 'Deposit',
+    balance: '3,534,251',
+    access: 'Manage',
+    txHistory: 'Browse',
+  },
+  {
+    key: '2',
+    name: 'Operation',
+    deposit: 'Deposit',
+    balance: '24,042',
+    access: 'Manage',
+    txHistory: 'Browse',
+  },
+  {
+    key: '3',
+    name: 'DevOp',
+    deposit: 'Deposit',
+    balance: '54,825',
+    access: 'Manage',
+    txHistory: 'Browse',
+  },
+  {
+    key: '4',
+    name: 'Marketing',
+    deposit: 'Deposit',
+    balance: '3,624',
+    access: 'Manage',
+    txHistory: 'Browse',
+  },
+  {
+    key: '5',
+    name: 'Travel',
+    deposit: 'Deposit',
+    balance: '12,678',
+    access: 'Manage',
+    txHistory: 'Browse',
+  },
+];
+
+export const subnameRows = [
+  {
+    key: '1',
+    subname: 'ryan.ensuite.eth',
+    email: 'ryan@ensuite.com',
+    ensuite: 'On',
+    statusClass: 'text-green-600',
+  },
+  {
+    key: '2',
+    subname: 'nicole.ensuite.eth',
+    email: 'nicole@ensuite.com',
+    ensuite: 'On',
+    statusClass: 'text-green-600',
+  },
+  {
+    key: '3',
+    subname: 'hao.ensuite.eth',
+    email: 'hao@ensuite.com',
+    ensuite: 'Off',
+    statusClass: 'text-red-600',
+  },
+  {
+    key: '4',
+    subname: 'juno.ensuite.eth',
+    email: 'juno@ensuite.com',
+    ensuite: 'Off',
+    statusClass: 'text-red-600',
+  },
+  {
+    key: '5',
+    subname: 'foodchain.ensuite.eth',
+    email: 'foodchain@ensuite.com',
+    ensuite: 'Off',
+    statusClass: 'text-red-600',
+  },
+];
