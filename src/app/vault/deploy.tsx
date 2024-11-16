@@ -19,60 +19,108 @@ interface DeployVaultProps {
 }
 
 // TODO: admin key should be take from the wallet
-const ADMIN_PRIVATE_KEY = process.env.NEXT_PUBLIC_ADMIN_PRIVATE_KEY
+const ADMIN_PRIVATE_KEY = "0x..."
+const ADMIN_Safe_Address = "0x..."
 
-export const DeployVault = ({ adminAddress }: DeployVaultProps) => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string>('');
-    const [deployedSafeAddress, setDeployedSafeAddress] = useState<string>('');
 
-    const { address: userAddress } = useAccount();
-    const { data: walletClient } = useWalletClient();
-    const publicClient = usePublicClient();
+// export const DeployVault = ({ adminAddress }: DeployVaultProps) => {
+//     const [loading, setLoading] = useState(false);
+//     const [error, setError] = useState<string>('');
+//     const [deployedSafeAddress, setDeployedSafeAddress] = useState<string>('');
 
-    const createSafeAccount = async () => {
-        if (!walletClient || !userAddress) {
-            setError('Wallet not connected');
-            return;
-        }
+//     const { address: userAddress } = useAccount();
+//     const { data: walletClient } = useWalletClient();
+//     const publicClient = usePublicClient();
 
-        setLoading(true);
-        try {
+//     const createSafeAccount = async () => {
+//         if (!walletClient || !userAddress) {
+//             setError('Wallet not connected');
+//             return;
+//         }
 
-            const safeAccountConfig: SafeAccountConfig = {
-                owners: [adminAddress], 
-                threshold: 1, 
-            }
+//         setLoading(true);
+//         try {
 
-            const safeDeploymentConfig: SafeDeploymentConfig = {
-                saltNonce: Date.now().toString(),
-            }
+//             const safeAccountConfig: SafeAccountConfig = {
+//                 owners: [adminAddress], 
+//                 threshold: 1, 
+//             }
 
-            const predictedSafe: PredictedSafeProps = {
-                safeAccountConfig,
-            }
+//             const safeDeploymentConfig: SafeDeploymentConfig = {
+//                 saltNonce: Date.now().toString(),
+//             }
+
+//             const predictedSafe: PredictedSafeProps = {
+//                 safeAccountConfig,
+//             }
 
               
-            const protocolKit = await Safe.init({
-                provider: baseSepolia.rpcUrls.default.http[0],
-                signer: ADMIN_PRIVATE_KEY,
-                predictedSafe
-              })
+//             const protocolKit = await Safe.init({
+//                 provider: baseSepolia.rpcUrls.default.http[0],
+//                 signer: ADMIN_PRIVATE_KEY,
+//                 predictedSafe
+//               })
 
-            const deployTx = await protocolKit.createSafeDeploymentTransaction()
+//             const deployTx = await protocolKit.createSafeDeploymentTransaction()
 
-        } catch (err) {
-            console.error('Error deploying Safe:', err);
-            setError(err instanceof Error ? err.message : 'Failed to deploy Safe');
-        } finally {
-            setLoading(false);
-        }
+//         } catch (err) {
+//             console.error('Error deploying Safe:', err);
+//             setError(err instanceof Error ? err.message : 'Failed to deploy Safe');
+//         } finally {
+//             setLoading(false);
+//         }
 
-        return {
-            createSafeAccount,
-            deployedSafeAddress,
-            loading,
-            error
-        };
-    };
-}
+//         return {
+//             createSafeAccount,
+//             deployedSafeAddress,
+//             loading,
+//             error
+//         };
+//     };
+// }
+
+const safeAccountConfig: SafeAccountConfig = {
+    owners: [ADMIN_Safe_Address],
+    threshold: 1
+    // More optional properties
+  }
+  
+const predictedSafe: PredictedSafeProps = {
+    safeAccountConfig
+    // More optional properties
+  }
+  
+const protocolKit = await Safe.init({
+    provider: baseSepolia.rpcUrls.default.http[0],
+    signer: ADMIN_PRIVATE_KEY,
+    predictedSafe
+  })
+
+const initialSafeAddress = await protocolKit.getAddress()
+
+const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
+
+const client = await protocolKit.getSafeProvider().getExternalSigner()
+if (!client) throw new Error('Failed to get external signer')
+
+
+const transactionHash = await client.sendTransaction({
+  to: deploymentTransaction.to,
+  value: BigInt(deploymentTransaction.value),
+  data: deploymentTransaction.data as `0x${string}`,
+  chain: baseSepolia as any
+})
+
+// const transactionReceipt = await client.waitForTransactionReceipt({
+//   hash: transactionHash
+// })
+
+const newProtocolKit = await protocolKit.connect({
+    safeAddress: initialSafeAddress
+  })
+  
+  const isSafeDeployed = await newProtocolKit.isSafeDeployed() // True
+  const safeAddress = await newProtocolKit.getAddress()
+  const safeOwners = await newProtocolKit.getOwners()
+  const safeThreshold = await newProtocolKit.getThreshold()
+  
